@@ -69,6 +69,8 @@ def _dfs_to_string(dfs: Iterable[GeoOrDataFrame]) -> str:
 
     for i, df in enumerate(dfs):
         description += f"DataFrame {i + 1}, will be sent_as df_{i + 1}:\n"
+        if hasattr(df, "crs"):
+            description += f"CRS: {df.crs}\n"
         description += f"Shape: {df.shape}\n"
         description += f"Columns (with types): {' - '.join([f'{col} ({df[col].dtype})' for col in df.columns])}\n"
         description += f"Head:\n{df.head()}\n\n"

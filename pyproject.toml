@@ -4,14 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "geopandas-ai"
-version = "0.0.2"
+version = "0.0.3"
 description = "GeoPandas AI is an extension of GeoPandas allowing you to interact with your spatial data in natural language."
 readme = "README.md"
 authors = [
     { name = "Gaspard Merten", email = "gaspard@norse.be" },
 ]
 license = "MIT"
-license-files = ["LICENSE"]
+license-files = ["LICENSE.MD"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
