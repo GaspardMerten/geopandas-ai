@@ -1,21 +1,23 @@
 # GeoPandas AI
 
-GeoPandas AI is a powerful Python library that brings natural language processing capabilities to your geospatial data analysis workflow. It allows you to interact with GeoDataFrames using natural language queries, making geospatial analysis more accessible and intuitive.
+GeoPandas AI is a powerful Python library that brings natural language processing capabilities to your geospatial data
+analysis workflow. It allows you to interact with GeoDataFrames using natural language queries, making geospatial
+analysis more accessible and intuitive.
 
 ## Features
 
 - Natural language interaction with GeoDataFrames
 - Support for multiple LLM providers through LiteLLM
 - Various output types including:
-  - GeoDataFrames
-  - DataFrames
-  - Text responses
-  - Plots
-  - Interactive maps
-  - Lists
-  - Dictionaries
-  - Numeric values (integers, floats)
-  - Boolean values
+    - GeoDataFrames
+    - DataFrames
+    - Text responses
+    - Plots
+    - Interactive maps
+    - Lists
+    - Dictionaries
+    - Numeric values (integers, floats)
+    - Boolean values
 
 ## Installation
 
@@ -52,6 +54,7 @@ map_view = gdfai.chat("Plot the points", result_type=gpdai.ResultType.MAP)
 GeoPandas AI uses LiteLLM to support multiple LLM providers. You can configure your preferred provider in two ways:
 
 1. Using the `set_active_lite_llm_config` function:
+
 ```python
 from geopandasai.config import set_active_lite_llm_config
 
@@ -62,9 +65,12 @@ set_active_lite_llm_config({
 ```
 
 2. Using environment variables:
+
 ```bash
 export LITELLM_CONFIG='{"model": "your_model_name", ...}'
 ```
+
+Please refer to https://docs.litellm.ai/docs/providers for more details on configuring LiteLLM.
 
 ## Available Result Types
 
@@ -84,6 +90,7 @@ The library supports various result types through the `ResultType` enum:
 ## Examples
 
 ### Basic Queries
+
 ```python
 # Count features
 count = gdfai.chat("how many features?", result_type=ResultType.INTEGER)
@@ -96,6 +103,7 @@ stats = gdfai.chat("what's the average population?", result_type=ResultType.FLOA
 ```
 
 ### Visualization
+
 ```python
 # Create a plot
 plot = gdfai.chat("create a scatter plot of population vs area", result_type=ResultType.PLOT)
@@ -105,6 +113,7 @@ map = gdfai.chat("show all points colored by population", result_type=ResultType
 ```
 
 ### Data Transformation
+
 ```python
 # Convert to list
 list_data = gdfai.chat("convert to list", result_type=ResultType.LIST)
