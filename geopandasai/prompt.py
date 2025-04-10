@@ -109,46 +109,6 @@ def execute_with_result_type(
     max_attempts = 5
     last_code = None
     last_exception = None
-
-    response, result = _iterate(
-        dataset_description,
-        dfs,
-        last_code,
-        last_exception,
-        libraries_str,
-        max_attempts,
-        prompt,
-        result_type,
-        system_instructions,
-    )
-
-    if result is None:
-        raise ValueError("The code did not return a valid result.")
-
-    set_to_cache_query_and_dfs(prompt, dfs, response, result_type=str(result_type))
-
-    if isinstance(result, GeoDataFrame):
-        from . import GeoDataFrameAI
-
-        result = GeoDataFrameAI.from_geodataframe(result)
-
-    return Output(
-        source_code=response,
-        result=result,
-    )
-
-
-def _iterate(
-    dataset_description,
-    dfs,
-    last_code,
-    last_exception,
-    libraries_str,
-    max_attempts,
-    prompt,
-    result_type,
-    system_instructions,
-):
     response = None
     result = None
 
@@ -178,23 +138,37 @@ def _iterate(
             )
 
             response = get_from_cache_query_and_dfs(
-                prompt, dfs, result_type
+                prompt, dfs, result_type.value
             ) or _prompt(template, remove_markdown_code_limiter=True)
 
         with tempfile.NamedTemporaryFile(delete=True, suffix=".py", mode="w") as f:
             f.write(response)
             f.flush()
 
-            spec = importlib.util.spec_from_file_location("output", f.name)
-            output_module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(output_module)
-        try:
-            result = output_module.execute(*dfs)
-            break
-        except Exception as e:
-            last_code = response
-            last_exception = f"{e}, {traceback.format_exc()}"
-    return response, result
+            try:
+                spec = importlib.util.spec_from_file_location("output", f.name)
+                output_module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(output_module)
+                result = output_module.execute(*dfs)
+                break
+            except Exception as e:
+                last_code = response
+                last_exception = f"{e}, {traceback.format_exc()}"
+
+    if result is None:
+        raise ValueError("The code did not return a valid result.")
+
+    set_to_cache_query_and_dfs(prompt, dfs, response, result_type=result_type.value)
+
+    if isinstance(result, GeoDataFrame):
+        from . import GeoDataFrameAI
+
+        result = GeoDataFrameAI.from_geodataframe(result)
+
+    return Output(
+        source_code=response,
+        result=result,
+    )
 
 
 def prompt_with_dataframes(

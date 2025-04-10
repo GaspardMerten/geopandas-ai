@@ -127,7 +127,7 @@ def get_from_cache_query_and_dfs(
     """
     Get the cached result for the given query and dataframes.
     """
-    return get_from_cache(_hash_query_and_dfs(query + str(result_type), dfs))
+    return get_from_cache(_hash_query_and_dfs(query + result_type, dfs))
 
 
 def set_to_cache_query_and_dfs(
@@ -136,4 +136,4 @@ def set_to_cache_query_and_dfs(
     """
     Set the cached result for the given query and dataframes.
     """
-    set_to_cache(_hash_query_and_dfs(query + str(result_type), dfs), value)
+    set_to_cache(_hash_query_and_dfs(query + result_type, dfs), value)
