@@ -4,24 +4,29 @@ import importlib.util
 import re
 import tempfile
 import traceback
-from typing import Iterable, Union
-from typing import List
+from typing import Iterable
 
-import folium
-import matplotlib.pyplot as plt
-import pandas as pd
 from geopandas import GeoDataFrame
 from litellm import completion
 
+from .cache import get_from_cache_query_and_dfs, set_to_cache_query_and_dfs
 from .config import get_active_lite_llm_config
-from .types import GeoOrDataFrame, ResultType
+from .template import Template, parse_template
+from .types import GeoOrDataFrame, ResultType, TemplateData, Output
 
 __all__ = ["prompt_with_dataframes"]
 
 
-def _prompt(messages: List[dict], max_tokens=None, remove_markdown_code_limiter=False) -> str:
-    output = completion(**get_active_lite_llm_config(), messages=messages, max_tokens=max_tokens).choices[
-        0].message.content
+def _prompt(template: TemplateData, remove_markdown_code_limiter=False) -> str:
+    output = (
+        completion(
+            **get_active_lite_llm_config(),
+            messages=template.messages,
+            max_tokens=template.max_tokens,
+        )
+        .choices[0]
+        .message.content
+    )
 
     if remove_markdown_code_limiter:
         output = re.sub(r"```[a-zA-Z]*", "", output)
@@ -35,15 +40,12 @@ def determine_type(prompt: str) -> ResultType:
     It returns either "TEXT" or "CHART".
     """
 
-    choices = [
-        result_type.value for result_type in ResultType
-    ]
-    result = _prompt([
-        {
-            "role": "user", "content": prompt}, {
-            "role": "user",
-            "content": f"Which of the following type of result should a code answering the prompt return? You must choose between {' - '.join(choices)}, only answer with the type between <Type> and </Type> tags. Example: <Type>{choices[0]}</Type>"
-        }, ], max_tokens=30, )
+    choices = [result_type.value for result_type in ResultType]
+    result = get_from_cache_query_and_dfs(prompt, []) or _prompt(
+        parse_template(Template.TYPE, prompt=prompt, choices=", ".join(choices))
+    )
+
+    set_to_cache_query_and_dfs(prompt, [], result)
 
     regex = f"<Type>({'|'.join(choices)})</Type>"
 
@@ -75,8 +77,8 @@ def _dfs_to_string(dfs: Iterable[GeoOrDataFrame]) -> str:
 
 
 def execute_with_result_type(
-        prompt: str, result_type: ResultType, *dfs: Iterable[GeoOrDataFrame]
-) -> Union[str, plt.Figure, pd.DataFrame, folium.Map, GeoOrDataFrame]:
+    prompt: str, result_type: ResultType, *dfs: Iterable[GeoOrDataFrame]
+) -> Output:
     result_type_to_python_type = {
         ResultType.TEXT: "str",
         ResultType.MAP: "folium.Map",
@@ -91,9 +93,10 @@ def execute_with_result_type(
     }
 
     libraries = ["pandas", "matplotlib.pyplot", "folium", "geopandas"]
+    libraries_str = ", ".join(libraries)
 
     dataset_description = _dfs_to_string(dfs)
-    df_args = ', '.join([f'df_{i + 1}' for i in range(len(dfs))])
+    df_args = ", ".join([f"df_{i + 1}" for i in range(len(dfs))])
 
     system_instructions = (
         "You are a helpful assistant specialized in returning Python code snippets formatted as follow {"
@@ -105,30 +108,76 @@ def execute_with_result_type(
     last_code = None
     last_exception = None
 
+    response, result = _iterate(
+        dataset_description,
+        dfs,
+        last_code,
+        last_exception,
+        libraries_str,
+        max_attempts,
+        prompt,
+        result_type,
+        system_instructions,
+    )
+
+    if result is None:
+        raise ValueError("The code did not return a valid result.")
+
+    set_to_cache_query_and_dfs(prompt, dfs, response, result_type=str(result_type))
+
+    if isinstance(result, GeoDataFrame):
+        from . import GeoDataFrameAI
+
+        result = GeoDataFrameAI.from_geodataframe(result)
+
+    return Output(
+        source_code=response,
+        result=result,
+    )
+
+
+def _iterate(
+    dataset_description,
+    dfs,
+    last_code,
+    last_exception,
+    libraries_str,
+    max_attempts,
+    prompt,
+    result_type,
+    system_instructions,
+):
+    response = None
     result = None
 
     for _ in range(max_attempts):
-        messages = [
-            {"role": "system", "content": system_instructions},
-            {"role": "user", "content": "Here is a prompt: " + prompt},
-            {"role": "user", "content": "Here are the libraries I can use: " + ", ".join(libraries)},
-            {"role": "user", "content": f"Create a code snippet that returns a {result_type.name.lower()}"},
-            {"role": "user", "content": "Here are the dataframes descriptions: " + dataset_description},
-            {"role": "user",
-             "content": "Only return the python code snippet, without any explanation or additional text. Do not forget to import the libraries you need."},
-        ]
-
         if last_code:
-            messages.append({"role": "assistant", "content": last_code})
-            messages.append(
-                {"role": "user", "content": f"Here is the code you gave previously: {last_code}"}
+            template = parse_template(
+                Template.CODE_PREVIOUSLY_ERROR,
+                system_instructions=system_instructions,
+                last_code=last_code,
+                last_exception=last_exception,
+                libraries=libraries_str,
+                prompt=prompt,
+                result_type=result_type.name.lower(),
+                dataset_description=dataset_description,
             )
-            messages.append(
-                {"role": "user",
-                 "content": f"Here is the exception you raised: {last_exception}, please fix it in your next attempt."}
+            response = _prompt(template, remove_markdown_code_limiter=True)
+        else:
+            template = parse_template(
+                Template.CODE,
+                system_instructions=system_instructions,
+                last_code=last_code,
+                last_exception=last_exception,
+                libraries=libraries_str,
+                prompt=prompt,
+                result_type=result_type.name.lower(),
+                dataset_description=dataset_description,
             )
 
-        response = _prompt(messages, max_tokens=2000, remove_markdown_code_limiter=True)
+            response = get_from_cache_query_and_dfs(
+                prompt, dfs, result_type
+            ) or _prompt(template, remove_markdown_code_limiter=True)
 
         with tempfile.NamedTemporaryFile(delete=True, suffix=".py", mode="w") as f:
             f.write(response)
@@ -143,19 +192,11 @@ def execute_with_result_type(
         except Exception as e:
             last_code = response
             last_exception = f"{e}, {traceback.format_exc()}"
-
-    if result is None:
-        raise ValueError("The code did not return a valid result.")
-
-    if isinstance(result, GeoDataFrame):
-        from . import GeoDataFrameAI
-        result = GeoDataFrameAI.from_geodataframe(result)
-
-    return result
+    return response, result
 
 
 def prompt_with_dataframes(
-        prompt: str, *dfs: Iterable[GeoOrDataFrame], result_type: ResultType = None
-) -> Union[str, plt.Figure, pd.DataFrame, folium.Map, GeoOrDataFrame]:
+    prompt: str, *dfs: Iterable[GeoOrDataFrame], result_type: ResultType = None
+) -> Output:
     result_type = result_type or determine_type(prompt)
     return execute_with_result_type(prompt, result_type, *dfs)

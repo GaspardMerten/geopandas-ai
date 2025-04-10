@@ -1,0 +1,13 @@
+{
+  "max_tokens": 30,
+  "messages": [
+    {
+      "role": "user",
+      "content": "{{ prompt }}"
+    },
+    {
+      "role": "user",
+      "content": "Which of the following type of result should a code answering the prompt return? You must choose between {{ choices }}, only answer with the type between <Type> and </Type> tags. Example: <Type>{choices[0]}</Type>"
+    }
+  ]
+}

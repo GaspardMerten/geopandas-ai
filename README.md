@@ -122,6 +122,57 @@ list_data = gdfai.chat("convert to list", result_type=ResultType.LIST)
 dict_data = gdfai.chat("convert to json", result_type=ResultType.DICT)
 ```
 
+## Caching
+
+GeoPandas AI includes a caching system to improve performance and reduce API calls. The library provides two types of
+caches:
+
+1. `InMemoryResultCache`: Stores results in memory (default)
+2. `FileResultCache`: Persists results to disk
+
+### Using Caching
+
+```python
+from geopandasai import set_cache_instance, FileResultCache, InMemoryResultCache
+
+# Use in-memory cache (default)
+set_cache_instance(InMemoryResultCache())
+
+# Or use file-based cache
+set_cache_instance(FileResultCache(cache_dir="./.geopandasai_cache"))
+```
+
+The cache automatically stores:
+
+- Query results
+- Generated code
+- Any intermediate results
+
+This helps in:
+
+- Reducing API calls
+- Improving response times for repeated queries
+- Saving costs when using paid LLM providers
+
+## Accessing Generated Code
+
+After each query, you can access the generated Python code that was used to produce the result:
+
+```python
+# Make a query
+result = gdfai.chat("how many points are in this dataset?")
+
+# Access the generated code
+print(gdfai.last_output.source_code)
+```
+
+This is useful for:
+
+- Understanding how the AI interpreted your query
+- Learning from the generated code
+- Debugging unexpected results
+- Reusing the generated code in your own scripts
+
 ## Requirements
 
 - Python 3.8+

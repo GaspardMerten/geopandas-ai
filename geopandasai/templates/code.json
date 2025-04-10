@@ -1,0 +1,29 @@
+{
+  "max_tokens": 2000,
+  "messages": [
+    {
+      "role": "system",
+      "content": "{{system_instructions}}"
+    },
+    {
+      "role": "user",
+      "content": "Here is a prompt: {{prompt}}"
+    },
+    {
+      "role": "user",
+      "content": "Here are the libraries I can use: {{libraries}} "
+    },
+    {
+      "role": "user",
+      "content": "Create a code snippet that returns a {{result_type}}"
+    },
+    {
+      "role": "user",
+      "content": "Here are the dataframes descriptions: {{dataset_description}}"
+    },
+    {
+      "role": "user",
+      "content": "Only return the python code snippet, without any explanation or additional text. Do not forget to import the libraries you need."
+    }
+  ]
+}

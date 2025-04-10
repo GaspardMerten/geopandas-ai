@@ -1,4 +1,6 @@
 import enum
+from dataclasses import dataclass
+from typing import Dict, List, Optional, Any
 
 import folium
 import pandas as pd
@@ -13,6 +15,7 @@ class ResultType(enum.Enum):
     """
     Enum to represent the type of result returned by the AI.
     """
+
     DATAFRAME = "dataframe"
     GEODATAFRAME = "geodataframe"
     TEXT = "text"
@@ -25,4 +28,27 @@ class ResultType(enum.Enum):
     BOOLEAN = "boolean"
 
 
-Output = pd.DataFrame | GeoDataFrame | str | list | dict | folium.Map | plt.Figure | int | float | bool
+Output = (
+    pd.DataFrame
+    | GeoDataFrame
+    | str
+    | list
+    | dict
+    | folium.Map
+    | plt.Figure
+    | int
+    | float
+    | bool
+)
+
+
+@dataclass
+class TemplateData:
+    messages: List[Dict]
+    max_tokens: Optional[int] = None
+
+
+@dataclass
+class Output:
+    source_code: str
+    result: Any
