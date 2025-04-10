@@ -1,14 +1,17 @@
 # import output dynamically
 import importlib.util
+import importlib.util
 import re
 import tempfile
-from typing import Iterable, List
+import traceback
+from typing import Iterable, Union
+from typing import List
 
+import folium
+import matplotlib.pyplot as plt
 import pandas as pd
-from folium import folium
 from geopandas import GeoDataFrame
 from litellm import completion
-from matplotlib import pyplot as plt
 
 from .config import get_active_lite_llm_config
 from .types import GeoOrDataFrame, ResultType
@@ -17,12 +20,8 @@ __all__ = ["prompt_with_dataframes"]
 
 
 def _prompt(messages: List[dict], max_tokens=None, remove_markdown_code_limiter=False) -> str:
-    print('\n'.join([f"{m['role']}: {m['content']}" for m in messages]))
     output = completion(**get_active_lite_llm_config(), messages=messages, max_tokens=max_tokens).choices[
         0].message.content
-    print("Output:", output)
-    print("=" * 50)
-    print("\n\n")
 
     if remove_markdown_code_limiter:
         output = re.sub(r"```[a-zA-Z]*", "", output)
@@ -75,40 +74,25 @@ def _dfs_to_string(dfs: Iterable[GeoOrDataFrame]) -> str:
     return description
 
 
-def prompt_with_dataframes(prompt: str, *dfs: Iterable[
-    GeoOrDataFrame]) -> str | plt.Figure | pd.DataFrame | folium.Map | GeoOrDataFrame:
-    """
-    A function to create a prompt for the GeoDataFrameAI class using litellm.
-    It returns a string that starts with TEXT or CHART, followed by the code
-    snippet wrapped in <Code> ... </Code>. The snippet must define:
-
-    def execute(*gdf_or_df_in_the_same_order) -> None:
-        ...
-    """
-
-    result_type = determine_type(prompt)
-
-    result_type_to_string = {
-        ResultType.TEXT: "a textual answer",
-        ResultType.MAP: "a folium map instance",
-        ResultType.PLOT: "a matplotlib plot",
-        ResultType.DATAFRAME: "a pandas dataframe",
-        ResultType.GEODATAFRAME: "a geopandas dataframe",
-    }
-
+def execute_with_result_type(
+        prompt: str, result_type: ResultType, *dfs: Iterable[GeoOrDataFrame]
+) -> Union[str, plt.Figure, pd.DataFrame, folium.Map, GeoOrDataFrame]:
     result_type_to_python_type = {
         ResultType.TEXT: "str",
         ResultType.MAP: "folium.Map",
         ResultType.PLOT: "plt.Figure",
         ResultType.DATAFRAME: "pd.DataFrame",
         ResultType.GEODATAFRAME: "gp.GeoDataFrame",
+        ResultType.LIST: "list",
+        ResultType.DICT: "dict",
+        ResultType.INTEGER: "int",
+        ResultType.FLOAT: "float",
+        ResultType.BOOLEAN: "bool",
     }
 
     libraries = ["pandas", "matplotlib.pyplot", "folium", "geopandas"]
 
     dataset_description = _dfs_to_string(dfs)
-
-    # You can modify system_instructions to guide the model’s output format
     df_args = ', '.join([f'df_{i + 1}' for i in range(len(dfs))])
 
     system_instructions = (
@@ -117,37 +101,61 @@ def prompt_with_dataframes(prompt: str, *dfs: Iterable[
         "    ...\n"
     )
 
-    # Here, we pass both system instructions and the user prompt to litellm:
-    messages = [
-        {"role": "system", "content": system_instructions},
-        {"role": "user", "content": "Here is a prompt: " + prompt},
-        {"role": "user", "content": "Here are the libraries I can use: " + ", ".join(libraries)},
-        {"role": "user", "content": "Create a code snippet that returns " + result_type_to_string[result_type]},
-        {"role": "user", "content": "Here are the dataframes descriptions: " + dataset_description},
-        {"role": "user",
-         "content": "Only return the python code snippet, without any explanation or additional text. Do not forget to import the libraries you need."},
-    ]
+    max_attempts = 5
+    last_code = None
+    last_exception = None
 
-    # Call the LLM using litellm
-    response = _prompt(messages, max_tokens=2000, remove_markdown_code_limiter=True)
+    result = None
 
-    with tempfile.NamedTemporaryFile(delete=True, suffix=".py",mode="w") as f:
-        f.write(response)
-        f.flush()
+    for _ in range(max_attempts):
+        messages = [
+            {"role": "system", "content": system_instructions},
+            {"role": "user", "content": "Here is a prompt: " + prompt},
+            {"role": "user", "content": "Here are the libraries I can use: " + ", ".join(libraries)},
+            {"role": "user", "content": f"Create a code snippet that returns a {result_type.name.lower()}"},
+            {"role": "user", "content": "Here are the dataframes descriptions: " + dataset_description},
+            {"role": "user",
+             "content": "Only return the python code snippet, without any explanation or additional text. Do not forget to import the libraries you need."},
+        ]
 
-        spec = importlib.util.spec_from_file_location("output", f.name)
+        if last_code:
+            messages.append({"role": "assistant", "content": last_code})
+            messages.append(
+                {"role": "user", "content": f"Here is the code you gave previously: {last_code}"}
+            )
+            messages.append(
+                {"role": "user",
+                 "content": f"Here is the exception you raised: {last_exception}, please fix it in your next attempt."}
+            )
 
-        # Create a module object from the spec
-        output_module = importlib.util.module_from_spec(spec)
+        response = _prompt(messages, max_tokens=2000, remove_markdown_code_limiter=True)
 
-        # Actually execute the module code
-        spec.loader.exec_module(output_module)
+        with tempfile.NamedTemporaryFile(delete=True, suffix=".py", mode="w") as f:
+            f.write(response)
+            f.flush()
 
-    # Now output_module should have an execute function
-    result = output_module.execute(*dfs)
+            spec = importlib.util.spec_from_file_location("output", f.name)
+            output_module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(output_module)
+        try:
+            result = output_module.execute(*dfs)
+            break
+        except Exception as e:
+            last_code = response
+            last_exception = f"{e}, {traceback.format_exc()}"
+
+    if result is None:
+        raise ValueError("The code did not return a valid result.")
 
     if isinstance(result, GeoDataFrame):
         from . import GeoDataFrameAI
         result = GeoDataFrameAI.from_geodataframe(result)
 
     return result
+
+
+def prompt_with_dataframes(
+        prompt: str, *dfs: Iterable[GeoOrDataFrame], result_type: ResultType = None
+) -> Union[str, plt.Figure, pd.DataFrame, folium.Map, GeoOrDataFrame]:
+    result_type = result_type or determine_type(prompt)
+    return execute_with_result_type(prompt, result_type, *dfs)

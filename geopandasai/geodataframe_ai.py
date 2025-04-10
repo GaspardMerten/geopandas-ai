@@ -15,8 +15,8 @@ class GeoDataFrameAI(GeoDataFrame):
     related to AI and machine learning tasks.
     """
 
-    def chat(self, prompt: str, *other_dfs: List[GeoOrDataFrame]):
-        return prompt_with_dataframes(prompt, self, *other_dfs)
+    def chat(self, prompt: str, *other_dfs: List[GeoOrDataFrame], result_type=None):
+        return prompt_with_dataframes(prompt, self, *other_dfs, result_type=result_type)
 
     @staticmethod
     def from_geodataframe(gdf: GeoDataFrame) -> "GeoDataFrameAI":

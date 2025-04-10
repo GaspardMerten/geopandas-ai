@@ -1,6 +1,9 @@
 import enum
 
+import folium
+import pandas as pd
 from geopandas import GeoDataFrame
+from matplotlib import pyplot as plt
 from pandas import DataFrame
 
 GeoOrDataFrame = GeoDataFrame | DataFrame
@@ -15,3 +18,11 @@ class ResultType(enum.Enum):
     TEXT = "text"
     PLOT = "plot"
     MAP = "map"
+    LIST = "list"
+    DICT = "dict"
+    INTEGER = "integer"
+    FLOAT = "float"
+    BOOLEAN = "boolean"
+
+
+Output = pd.DataFrame | GeoDataFrame | str | list | dict | folium.Map | plt.Figure | int | float | bool
