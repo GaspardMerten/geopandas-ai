@@ -132,7 +132,7 @@ dict_data = gdfai.chat("convert to json", result_type=ResultType.DICT)
 
 ## License
 
-[Your License Here]
+MIT + Commercial Platform Restriction (see LICENSE.md)
 
 ## Contributing
 

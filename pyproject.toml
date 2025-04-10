@@ -3,7 +3,7 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "GeoPandas AI"
+name = "geopandas-ai"
 version = "0.0.1"
 description = "GeoPandas AI is an extension of GeoPandas allowing you to interact with your spatial data in natural language."
 readme = "README.md"
