@@ -72,6 +72,36 @@ export LITELLM_CONFIG='{"model": "your_model_name", ...}'
 
 Please refer to https://docs.litellm.ai/docs/providers for more details on configuring LiteLLM.
 
+## Adding Custom Libraries
+
+GeoPandas AI allows you to extend its capabilities by adding custom libraries that can be used in the generated code. There are two ways to add libraries:
+
+1. Globally using `set_libraries`:
+```python
+from geopandasai.config import set_libraries
+
+# Add libraries that will be available for all chat queries
+set_libraries(['numpy', 'scipy', 'shapely'])
+```
+
+2. Per-query using the `user_provided_libraries` parameter:
+```python
+# Add libraries for a specific query
+result = gdfai.chat(
+    "calculate the convex hull using scipy",
+    result_type=ResultType.GEODATAFRAME,
+    user_provided_libraries=['scipy', 'numpy']
+)
+```
+
+By default, the following libraries are always available:
+- pandas
+- matplotlib.pyplot
+- folium
+- geopandas
+
+Note: Make sure any additional libraries you specify are installed in your environment.
+
 ## Available Result Types
 
 The library supports various result types through the `ResultType` enum:

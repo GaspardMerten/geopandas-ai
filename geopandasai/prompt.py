@@ -4,13 +4,13 @@ import importlib.util
 import re
 import tempfile
 import traceback
-from typing import Iterable
+from typing import Iterable, List
 
 from geopandas import GeoDataFrame
 from litellm import completion
 
 from .cache import get_from_cache_query_and_dfs, set_to_cache_query_and_dfs
-from .config import get_active_lite_llm_config
+from .config import get_active_lite_llm_config, get_libraries
 from .template import Template, parse_template
 from .types import GeoOrDataFrame, ResultType, TemplateData, Output
 
@@ -79,7 +79,10 @@ def _dfs_to_string(dfs: Iterable[GeoOrDataFrame]) -> str:
 
 
 def execute_with_result_type(
-    prompt: str, result_type: ResultType, *dfs: Iterable[GeoOrDataFrame]
+    prompt: str,
+    result_type: ResultType,
+    *dfs: Iterable[GeoOrDataFrame],
+    user_provided_libraries: List[str] = None,
 ) -> Output:
     result_type_to_python_type = {
         ResultType.TEXT: "str",
@@ -94,7 +97,11 @@ def execute_with_result_type(
         ResultType.BOOLEAN: "bool",
     }
 
-    libraries = ["pandas", "matplotlib.pyplot", "folium", "geopandas"]
+    libraries = (
+        ["pandas", "matplotlib.pyplot", "folium", "geopandas"]
+        + (user_provided_libraries or [])
+        + get_libraries()
+    )
     libraries_str = ", ".join(libraries)
 
     dataset_description = _dfs_to_string(dfs)
@@ -172,7 +179,12 @@ def execute_with_result_type(
 
 
 def prompt_with_dataframes(
-    prompt: str, *dfs: Iterable[GeoOrDataFrame], result_type: ResultType = None
+    prompt: str,
+    *dfs: Iterable[GeoOrDataFrame],
+    result_type: ResultType = None,
+    user_provided_libraries: List[str] = None,
 ) -> Output:
     result_type = result_type or determine_type(prompt)
-    return execute_with_result_type(prompt, result_type, *dfs)
+    return execute_with_result_type(
+        prompt, result_type, *dfs, user_provided_libraries=user_provided_libraries
+    )

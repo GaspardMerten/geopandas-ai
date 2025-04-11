@@ -23,10 +23,18 @@ class GeoDataFrameAI(GeoDataFrame):
         self.last_output: Output = None
 
     def chat(
-        self, prompt: str, *other_dfs: List[GeoOrDataFrame], result_type=None
+        self,
+        prompt: str,
+        *other_dfs: List[GeoOrDataFrame],
+        result_type=None,
+        user_provided_libraries: List[str] = None,
     ) -> Any:
         self.last_output = prompt_with_dataframes(
-            prompt, self, *other_dfs, result_type=result_type
+            prompt,
+            self,
+            *other_dfs,
+            result_type=result_type,
+            user_provided_libraries=user_provided_libraries,
         )
         return self.last_output.result
 
