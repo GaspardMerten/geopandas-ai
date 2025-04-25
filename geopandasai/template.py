@@ -26,6 +26,10 @@ def _check():
     _check()
 
 
+def sanitize_text(data) -> str:
+    return json.dumps(data)[1:-1]
+
+
 def parse_template(template: Template, **context) -> TemplateData:
     """
     Parse the template file and return the content.
@@ -39,8 +43,6 @@ def parse_template(template: Template, **context) -> TemplateData:
             raise ValueError(
                 f"Missing context variable '{match[1]}' in template {template.value}.json"
             )
-        content = content.replace(
-            match[0], context[match[1]].replace('"', "'").replace("\n", " ")
-        )
+        content = content.replace(match[0], sanitize_text(context[match[1]]))
 
     return TemplateData(**json.loads(content))
