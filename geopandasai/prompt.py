@@ -1,11 +1,13 @@
 # import output dynamically
 import importlib.util
 import importlib.util
+import os
 import re
 import tempfile
 import traceback
 from typing import Iterable, List
 
+import requests
 from geopandas import GeoDataFrame
 from litellm import completion
 
@@ -18,15 +20,24 @@ __all__ = ["prompt_with_dataframes"]
 
 
 def _prompt(template: TemplateData, remove_markdown_code_limiter=False) -> str:
-    output = (
-        completion(
-            **get_active_lite_llm_config(),
-            messages=template.messages,
-            max_tokens=template.max_tokens,
+    if os.environ.get("GEOPANDAS_AI_ENDPOINT"):
+        output = requests.post(
+            os.environ["GEOPANDAS_AI_ENDPOINT"],
+            json={
+                "messages": template.messages,
+            },
+        ).text
+        print("Using endpoint")
+    else:
+        output = (
+            completion(
+                **get_active_lite_llm_config(),
+                messages=template.messages,
+                max_tokens=template.max_tokens,
+            )
+            .choices[0]
+            .message.content
         )
-        .choices[0]
-        .message.content
-    )
 
     if remove_markdown_code_limiter:
         output = re.sub(r"```[a-zA-Z]*", "", output)
@@ -161,6 +172,8 @@ def execute_with_result_type(
             except Exception as e:
                 last_code = response
                 last_exception = f"{e}, {traceback.format_exc()}"
+                print(last_code)
+                print(last_exception)
 
     if result is None:
         raise ValueError("The code did not return a valid result.")

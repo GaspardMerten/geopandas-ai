@@ -26,6 +26,29 @@ def _check():
     _check()
 
 
+def insert_text_in_json_middle(
+    json_obj: dict, insert_text: str, key: str = None
+) -> str:
+    # Convert the insert_text to a JSON-safe string
+    safe_text = json.dumps(insert_text)[1:-1]  # remove quotes added by json.dumps
+
+    if key:
+        if key not in json_obj or not isinstance(json_obj[key], str):
+            raise ValueError("Key must exist and its value must be a string")
+        original_value = json_obj[key]
+        mid = len(original_value) // 2
+        modified_value = original_value[:mid] + insert_text + original_value[mid:]
+        json_obj[key] = modified_value
+    else:
+        # Convert full JSON to string and insert in the middle
+        json_str = json.dumps(json_obj)
+        mid = len(json_str) // 2
+        modified_str = json_str[:mid] + safe_text + json_str[mid:]
+        return modified_str
+
+    return json.dumps(json_obj)[1:-1]
+
+
 def parse_template(template: Template, **context) -> TemplateData:
     """
     Parse the template file and return the content.
@@ -40,7 +63,7 @@ def parse_template(template: Template, **context) -> TemplateData:
                 f"Missing context variable '{match[1]}' in template {template.value}.json"
             )
         content = content.replace(
-            match[0], context[match[1]].replace('"', "'").replace("\n", " ")
+            match[0],
+            json.dumps(context[match[1]])[1:-1],  # remove quotes added by json.dumps
         )
-
     return TemplateData(**json.loads(content))
