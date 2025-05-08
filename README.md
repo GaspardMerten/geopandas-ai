@@ -163,13 +163,13 @@ caches:
 ### Using Caching
 
 ```python
-from geopandasai import set_cache_instance, FileResultCache, InMemoryResultCache
+from geopandasai import set_cache_instance, FileCache, InMemoryCache
 
 # Use in-memory cache (default)
-set_cache_instance(InMemoryResultCache())
+set_cache_instance(InMemoryCache())
 
 # Or use file-based cache
-set_cache_instance(FileResultCache(cache_dir="./.geopandasai_cache"))
+set_cache_instance(FileCache(cache_dir="./.geopandasai_cache"))
 ```
 
 The cache automatically stores:

@@ -2,8 +2,8 @@ from typing import List, Any
 
 from geopandas import GeoDataFrame
 
-from .prompt import prompt_with_dataframes
-from .types import GeoOrDataFrame, Output
+from .code import prompt_with_dataframes, WithPrompt
+from .types import Output
 
 __all__ = ["GeoDataFrameAI"]
 
@@ -25,14 +25,13 @@ class GeoDataFrameAI(GeoDataFrame):
     def chat(
         self,
         prompt: str,
-        *other_dfs: List[GeoOrDataFrame],
+        *other_dfs,
         result_type=None,
         user_provided_libraries: List[str] = None,
-    ) -> Any:
+    ) -> Any | WithPrompt:
         self.last_output = prompt_with_dataframes(
             prompt,
-            self,
-            *other_dfs,
+            [self] + list(other_dfs),
             result_type=result_type,
             user_provided_libraries=user_provided_libraries,
         )

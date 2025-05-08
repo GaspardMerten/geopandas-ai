@@ -1,4 +1,11 @@
-litellm
-geopandas
-matplotlib
-folium
+litellm~=1.65.4.post1
+geopandas~=1.0.1
+matplotlib~=3.10.1
+folium~=0.19.5
+ipynbname~=2024.1.0.0
+pandas~=2.2.3
+setuptools~=79.0.1
+vertexai~=1.71.1
+google-cloud-aiplatform~=1.71.1
+regex~=2024.11.6
+colorama~=0.4.6

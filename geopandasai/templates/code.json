@@ -23,7 +23,7 @@
     },
     {
       "role": "user",
-      "content": "Only return the python code snippet, without any explanation or additional text. Do not forget to import the libraries you need."
+      "content": "Only return the python code snippet, without any explanation or documentation or additional text. Do not forget to import the libraries you use. Also document the function with Sphinx style comments."
     }
   ]
 }
