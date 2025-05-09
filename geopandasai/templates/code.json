@@ -3,7 +3,7 @@
   "messages": [
     {
       "role": "system",
-      "content": "{{system_instructions}}"
+      "content": "You are a helpful assistant specialized in returning Python code snippets formatted as follow \"def execute({{dfs}}) -> {{return_type}}:\""
     },
     {
       "role": "user",
@@ -15,7 +15,7 @@
     },
     {
       "role": "user",
-      "content": "Create a code snippet that returns a {{result_type}}"
+      "content": "Create a code snippet that returns a {{return_type}}"
     },
     {
       "role": "user",
@@ -23,7 +23,7 @@
     },
     {
       "role": "user",
-      "content": "Only return the python code snippet, without any explanation or documentation or additional text. Do not forget to import the libraries you use. Also document the function with Sphinx style comments."
+      "content": "Only return the python code snippet, without any explanation or additional text. Do not forget to import the libraries you use. Also document the function with Sphinx style comments."
     }
   ]
 }

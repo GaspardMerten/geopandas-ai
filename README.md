@@ -28,7 +28,10 @@ pip install geopandas-ai
 ## Quick Start
 
 ```python
+import geopandas
 import geopandasai as gpdai
+import folium
+import json
 
 # Configure your LLM provider (example using Google's Vertex AI)
 gpdai.set_active_lite_llm_config({
@@ -44,9 +47,9 @@ result = gdfai.chat("how many points are in this dataset?")
 print(result)
 
 # Get specific types of results
-count = gdfai.chat("how many points?", result_type=gpdai.ResultType.INTEGER)
-points_only = gdfai.chat("Keep only geometry of type point", result_type=gpdai.ResultType.GEODATAFRAME)
-map_view = gdfai.chat("Plot the points", result_type=gpdai.ResultType.MAP)
+count = gdfai.chat("how many points?", result_type=int)
+points_only = gdfai.chat("Keep only geometry of type point", result_type=geopandas.GeoDataFrame)
+map_view = gdfai.chat("Plot the points", result_type=folium.Map)
 ```
 
 ## Configuration
@@ -56,7 +59,7 @@ GeoPandas AI uses LiteLLM to support multiple LLM providers. You can configure y
 1. Using the `set_active_lite_llm_config` function:
 
 ```python
-from geopandasai.config import set_active_lite_llm_config
+from geopandasai import set_active_lite_llm_config
 
 set_active_lite_llm_config({
     "model": "your_model_name",
@@ -74,48 +77,36 @@ Please refer to https://docs.litellm.ai/docs/providers for more details on confi
 
 ## Adding Custom Libraries
 
-GeoPandas AI allows you to extend its capabilities by adding custom libraries that can be used in the generated code. There are two ways to add libraries:
+GeoPandas AI allows you to extend its capabilities by adding custom libraries that can be used in the generated code.
+There are two ways to add libraries:
 
 1. Globally using `set_libraries`:
+
 ```python
-from geopandasai.config import set_libraries
+from geopandasai import set_libraries
 
 # Add libraries that will be available for all chat queries
 set_libraries(['numpy', 'scipy', 'shapely'])
 ```
 
 2. Per-query using the `user_provided_libraries` parameter:
+
 ```python
 # Add libraries for a specific query
 result = gdfai.chat(
     "calculate the convex hull using scipy",
-    result_type=ResultType.GEODATAFRAME,
     user_provided_libraries=['scipy', 'numpy']
 )
 ```
 
 By default, the following libraries are always available:
+
 - pandas
 - matplotlib.pyplot
 - folium
 - geopandas
 
 Note: Make sure any additional libraries you specify are installed in your environment.
-
-## Available Result Types
-
-The library supports various result types through the `ResultType` enum:
-
-- `DATAFRAME`: Returns a pandas DataFrame
-- `GEODATAFRAME`: Returns a GeoDataFrame
-- `TEXT`: Returns a text response
-- `PLOT`: Returns a matplotlib figure
-- `MAP`: Returns a folium map
-- `LIST`: Returns a list
-- `DICT`: Returns a dictionary
-- `INTEGER`: Returns an integer
-- `FLOAT`: Returns a float
-- `BOOLEAN`: Returns a boolean
 
 ## Examples
 
@@ -193,7 +184,11 @@ After each query, you can access the generated Python code that was used to prod
 result = gdfai.chat("how many points are in this dataset?")
 
 # Access the generated code
-print(gdfai.last_output.source_code)
+print(gdfai.last_output.code)
+
+# or
+
+code = gdfai.chat("how many points are in this dataset?").code
 ```
 
 This is useful for:
@@ -210,6 +205,7 @@ This is useful for:
 - LiteLLM
 - Matplotlib
 - Folium
+- Contextily
 
 ## License
 

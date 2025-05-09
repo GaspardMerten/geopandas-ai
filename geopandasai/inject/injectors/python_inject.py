@@ -14,7 +14,6 @@ class PythonCodeInjector(ACodeInjector):
     ):
         frame = inspect.currentframe()
         caller_frame = frame.f_back.f_back.f_back
-        print(caller_frame)
         filename = caller_frame.f_code.co_filename
         with open(filename, "r") as f:
             code = f.read()

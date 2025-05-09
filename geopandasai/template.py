@@ -2,7 +2,31 @@ import enum
 import json
 import re
 
+from litellm import completion
+
+from .config import get_active_lite_llm_config
 from .types import TemplateData
+
+__all__ = ["prompt_with_template", "parse_template", "Template", "sanitize_text"]
+
+
+def prompt_with_template(
+    template: TemplateData, remove_markdown_code_limiter=False
+) -> str:
+    output = (
+        completion(
+            **get_active_lite_llm_config(),
+            messages=template.messages,
+            max_tokens=template.max_tokens,
+        )
+        .choices[0]
+        .message.content
+    )
+
+    if remove_markdown_code_limiter:
+        output = re.sub(r"```[a-zA-Z]*", "", output)
+
+    return output
 
 
 class Template(enum.Enum):
@@ -44,5 +68,4 @@ def parse_template(template: Template, **context) -> TemplateData:
                 f"Missing context variable '{match[1]}' in template {template.value}.json"
             )
         content = content.replace(match[0], sanitize_text(context[match[1]]))
-
     return TemplateData(**json.loads(content))

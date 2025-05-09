@@ -1,19 +1,19 @@
 import re
+from typing import Type
 
-from .types import ResultType
-from .cache import cache
-from .prompt import prompt_with_template
-from .template import parse_template, Template
+from ...cache import cache
+from ...result_type import get_available_result_types, result_type_from_literal
+from ...template import parse_template, Template, prompt_with_template
 
 
 @cache
-def determine_type(prompt: str) -> ResultType:
+def determine_type(prompt: str) -> Type:
     """
     A function to determine the type of prompt based on its content.
     It returns either "TEXT" or "CHART".
     """
 
-    choices = [result_type.value for result_type in ResultType]
+    choices = get_available_result_types()
     result = prompt_with_template(
         parse_template(Template.TYPE, prompt=prompt, choices=", ".join(choices))
     )
@@ -32,4 +32,4 @@ def determine_type(prompt: str) -> ResultType:
     # Extract the code snippet from the response
     result_type = match[0]
 
-    return ResultType(result_type)
+    return result_type_from_literal(result_type)
