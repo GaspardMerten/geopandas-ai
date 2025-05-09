@@ -32,3 +32,9 @@ dependencies = [
 "Bug Tracker" = "https://github.com/GaspardMerten/geopandas-ai/issues"
 
 
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+"geopandas-ai" = ["*/templates/*.json"]
