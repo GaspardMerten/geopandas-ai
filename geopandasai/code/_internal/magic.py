@@ -1,4 +1,4 @@
-from typing import Any, Self, List, Type
+from typing import Any, List, Type
 
 import colorama
 
@@ -29,7 +29,7 @@ class MagicReturnCore:
 
         self.memory.log(prompt, self._code)
 
-    def chat(self, prompt: str) -> Any | Self:
+    def chat(self, prompt: str) -> Any | "MagicReturn":
         return magic_prompt_with_dataframes(
             prompt,
             *self.memory.dfs,

@@ -45,7 +45,23 @@ class GeoDataFrameAI(GeoDataFrame):
     def code(self) -> str:
         if self.last_output is None:
             raise ValueError("No code has been generated yet. Please run a chat first.")
-        return self.last_output.source_code
+        return self.last_output.code
+
+    def inspect(self) -> str:
+        """
+        Inspect the last output.
+        """
+        if self.last_output is None:
+            raise ValueError("No code has been generated yet. Please run a chat first.")
+        return self.last_output.inspect()
+
+    def print_history(self) -> List[str]:
+        """
+        Print the history of the last output.
+        """
+        if self.last_output is None:
+            raise ValueError("No code has been generated yet. Please run a chat first.")
+        return self.last_output.print_history()
 
     @staticmethod
     def from_geodataframe(gdf: GeoDataFrame) -> "GeoDataFrameAI":

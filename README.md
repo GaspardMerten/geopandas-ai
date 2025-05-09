@@ -8,16 +8,7 @@ analysis more accessible and intuitive.
 
 - Natural language interaction with GeoDataFrames
 - Support for multiple LLM providers through LiteLLM
-- Various output types including:
-    - GeoDataFrames
-    - DataFrames
-    - Text responses
-    - Plots
-    - Interactive maps
-    - Lists
-    - Dictionaries
-    - Numeric values (integers, floats)
-    - Boolean values
+- Built-in support for Jupyter notebooks
 
 ## Installation
 
@@ -27,29 +18,27 @@ pip install geopandas-ai
 
 ## Quick Start
 
+GeoPandas AI is designed to work seamlessly with GeoPandas. Most function available in GeoPandas are also available in
+GeoPandas AI. 
+
+### Example Usage 1 
+
 ```python
-import geopandas
 import geopandasai as gpdai
-import folium
-import json
 
-# Configure your LLM provider (example using Google's Vertex AI)
-gpdai.set_active_lite_llm_config({
-    "model": "vertex_ai/gemini-2.0-flash",
-    "vertex_credentials": json.dumps(json.load(open("google-credentials.json", "r")))
-})
+gdfai = gpdai.read_file("path/to/your/geodatafile.geojson")
 
-# Load your geospatial data
-gdfai = gpdai.read_file("your_data.geojson")
+gdfai.chat("Plot the data")
+gdfai.improve("Change the title to something more selling and add a basemap")
+```
 
-# Ask questions about your data
-result = gdfai.chat("how many points are in this dataset?")
-print(result)
+## Example Usage 2
+```python
+import geopandasai as gpdai
 
-# Get specific types of results
-count = gdfai.chat("how many points?", result_type=int)
-points_only = gdfai.chat("Keep only geometry of type point", result_type=geopandas.GeoDataFrame)
-map_view = gdfai.chat("Plot the points", result_type=folium.Map)
+gdfai = gpdai.read_file("path/to/your/geodatafile.geojson")
+
+gdfai.chat("Plot the data").chat("Change the title to something more selling and add a basemap")
 ```
 
 ## Configuration
@@ -105,98 +94,9 @@ By default, the following libraries are always available:
 - matplotlib.pyplot
 - folium
 - geopandas
+- contextily
 
 Note: Make sure any additional libraries you specify are installed in your environment.
-
-## Examples
-
-### Basic Queries
-
-```python
-# Count features
-count = gdfai.chat("how many features?", result_type=ResultType.INTEGER)
-
-# Filter data
-filtered = gdfai.chat("show only points with population > 1000", result_type=ResultType.GEODATAFRAME)
-
-# Get statistics
-stats = gdfai.chat("what's the average population?", result_type=ResultType.FLOAT)
-```
-
-### Visualization
-
-```python
-# Create a plot
-plot = gdfai.chat("create a scatter plot of population vs area", result_type=ResultType.PLOT)
-
-# Generate an interactive map
-map = gdfai.chat("show all points colored by population", result_type=ResultType.MAP)
-```
-
-### Data Transformation
-
-```python
-# Convert to list
-list_data = gdfai.chat("convert to list", result_type=ResultType.LIST)
-
-# Convert to dictionary
-dict_data = gdfai.chat("convert to json", result_type=ResultType.DICT)
-```
-
-## Caching
-
-GeoPandas AI includes a caching system to improve performance and reduce API calls. The library provides two types of
-caches:
-
-1. `InMemoryResultCache`: Stores results in memory (default)
-2. `FileResultCache`: Persists results to disk
-
-### Using Caching
-
-```python
-from geopandasai import set_cache_instance, FileCache, InMemoryCache
-
-# Use in-memory cache (default)
-set_cache_instance(InMemoryCache())
-
-# Or use file-based cache
-set_cache_instance(FileCache(cache_dir="./.geopandasai_cache"))
-```
-
-The cache automatically stores:
-
-- Query results
-- Generated code
-- Any intermediate results
-
-This helps in:
-
-- Reducing API calls
-- Improving response times for repeated queries
-- Saving costs when using paid LLM providers
-
-## Accessing Generated Code
-
-After each query, you can access the generated Python code that was used to produce the result:
-
-```python
-# Make a query
-result = gdfai.chat("how many points are in this dataset?")
-
-# Access the generated code
-print(gdfai.last_output.code)
-
-# or
-
-code = gdfai.chat("how many points are in this dataset?").code
-```
-
-This is useful for:
-
-- Understanding how the AI interpreted your query
-- Learning from the generated code
-- Debugging unexpected results
-- Reusing the generated code in your own scripts
 
 ## Requirements
 
