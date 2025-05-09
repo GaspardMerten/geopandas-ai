@@ -37,4 +37,4 @@ dependencies = [
 include-package-data = true
 
 [tool.setuptools.package-data]
-"geopandasai" = ["*/templates/*.json"]
+"geopandasai" = ["templates/*.json"]
