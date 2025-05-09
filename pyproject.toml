@@ -22,6 +22,9 @@ dependencies = [
     "folium",
     "matplotlib",
     "litellm",
+    "ipynbname",
+    "colorama",
+    "contextily"
 ]
 
 [project.urls]
