@@ -1,4 +1,4 @@
-from typing import List, Any
+from typing import List, Any, Union
 
 from geopandas import GeoDataFrame
 
@@ -19,7 +19,7 @@ class GeoDataFrameAI(GeoDataFrame):
         Initialize the GeoDataFrameAI class.
         """
         super().__init__(*args, **kwargs)
-        self.last_output: MagicReturn | Any = None
+        self.last_output: Union[MagicReturn, Any] = None
 
     def chat(
         self,
@@ -27,7 +27,7 @@ class GeoDataFrameAI(GeoDataFrame):
         *other_dfs,
         result_type=None,
         user_provided_libraries: List[str] = None,
-    ) -> Any | MagicReturn:
+    ) -> Union[Any, MagicReturn]:
         self.last_output = chat(
             prompt,
             *([self] + list(other_dfs)),

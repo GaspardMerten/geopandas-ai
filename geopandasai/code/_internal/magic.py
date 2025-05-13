@@ -1,4 +1,4 @@
-from typing import Any, List, Type
+from typing import Any, List, Type, Union
 
 import colorama
 
@@ -29,7 +29,7 @@ class MagicReturnCore:
 
         self.memory.log(prompt, self._code)
 
-    def chat(self, prompt: str) -> Any | "MagicReturn":
+    def chat(self, prompt: str) -> Union["MagicReturn", Any]:
         return magic_prompt_with_dataframes(
             prompt,
             *self.memory.dfs,
@@ -136,7 +136,7 @@ def magic_prompt_with_dataframes(
     result_type: Type = None,
     user_provided_libraries: List[str] = None,
     memory: Memory = None,
-) -> MagicReturn | Any:
+) -> Union[MagicReturn, Any]:
     dfs = dfs or []
     result_type = result_type or determine_type(prompt)
     return MagicReturn(

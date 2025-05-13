@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 from .base import CacheBackend
 
@@ -8,7 +9,7 @@ class FileSystemCacheBackend(CacheBackend):
         self.cache_dir = cache_dir
         os.makedirs(cache_dir, exist_ok=True)
 
-    def get_cache(self, key: str) -> bytes | None:
+    def get_cache(self, key: str) -> Optional[bytes]:
         try:
             with open(os.path.join(self.cache_dir, key), "rb") as f:
                 return f.read()

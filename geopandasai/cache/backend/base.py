@@ -1,8 +1,9 @@
 import abc
+from typing import Optional
 
 
 class CacheBackend(abc.ABC):
-    def get_cache(self, key: str) -> bytes | None:
+    def get_cache(self, key: str) -> Optional[bytes]:
         """
         Get the cached result for the given key.
         """

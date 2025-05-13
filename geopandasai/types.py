@@ -9,4 +9,5 @@ GeoOrDataFrame = Union[GeoDataFrame, DataFrame]
 
 @dataclass
 class TemplateData:
+    max_tokens: int
     messages: List[Dict]

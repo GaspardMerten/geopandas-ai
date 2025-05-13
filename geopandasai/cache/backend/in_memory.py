@@ -1,3 +1,5 @@
+from typing import Optional
+
 from .base import CacheBackend
 
 
@@ -5,7 +7,7 @@ class InMemoryCacheBackend(CacheBackend):
     def __init__(self):
         self.cache = {}
 
-    def get_cache(self, key: str) -> bytes | None:
+    def get_cache(self, key: str) -> Optional[bytes]:
         return self.cache.get(key)
 
     def set_cache(self, key: str, value: bytes) -> None:

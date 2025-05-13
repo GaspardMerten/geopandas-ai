@@ -8,7 +8,9 @@ __all__ = [
     "get_libraries",
 ]
 
-_active_lite_llm_config: dict | None = None
+from typing import Union
+
+_active_lite_llm_config: Union[dict, None] = None
 _libraries = []
 
 

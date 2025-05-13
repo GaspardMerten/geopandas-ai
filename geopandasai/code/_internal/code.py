@@ -1,5 +1,5 @@
 import traceback
-from typing import List, Type
+from typing import List, Type, Union
 
 from .execute import execute_func
 from ...config import get_libraries
@@ -35,7 +35,7 @@ def build_code(
     result_type: Type,
     dfs: List[GeoOrDataFrame],
     user_provided_libraries: List[str] = None,
-) -> str | None:
+) -> Union[str, None]:
     dataset_description, libraries_str, system_instructions = build_static_description(
         dfs, user_provided_libraries
     )
