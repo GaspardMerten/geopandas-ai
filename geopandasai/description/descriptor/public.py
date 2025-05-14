@@ -16,7 +16,7 @@ class PublicDataDescriptor(Descriptor):
         if hasattr(dataframe, "geometry"):
             description += f"Geometry: {dataframe.geometry.name}\n"
         if hasattr(dataframe, "index"):
-            description += f"Index: {dataframe.index.name}\n"
+            description += f"Index: {dataframe.index}\n"
         description += f"Shape: {dataframe.shape}\n"
         description += f"Columns (with types): {' - '.join([f'{col} ({dataframe[col].dtype})' for col in dataframe.columns])}\n"
         description += f"Statistics:\n{dataframe.describe()}\n\n"
