@@ -2,7 +2,7 @@ import re
 from typing import Type
 
 from ...cache import cache
-from ...result_type import get_available_result_types, result_type_from_literal
+from ...return_type import get_available_return_types, return_type_from_literal
 from ...template import parse_template, Template, prompt_with_template
 
 
@@ -13,7 +13,7 @@ def determine_type(prompt: str) -> Type:
     It returns either "TEXT" or "CHART".
     """
 
-    choices = get_available_result_types()
+    choices = get_available_return_types()
     result = prompt_with_template(
         parse_template(Template.TYPE, prompt=prompt, choices=", ".join(choices))
     )
@@ -30,6 +30,6 @@ def determine_type(prompt: str) -> Type:
         raise ValueError("The response does not match the expected format.")
 
     # Extract the code snippet from the response
-    result_type = match[0]
+    return_type = match[0]
 
-    return result_type_from_literal(result_type)
+    return return_type_from_literal(return_type)

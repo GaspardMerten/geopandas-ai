@@ -5,7 +5,6 @@ from .config import (
     get_libraries,
     get_active_lite_llm_config,
 )
-from .result_type import result_type_registry
 from .geodataframe_ai import GeoDataFrameAI
 from .code import chat
 from .types import *

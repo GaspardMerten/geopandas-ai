@@ -23,21 +23,21 @@ class ResultTypeRegistry:
             bool,
         }
 
-    def register(self, result_type):
+    def register(self, return_type):
         """
         Register a new result type.
         """
-        if not isinstance(result_type, type):
+        if not isinstance(return_type, type):
             raise TypeError("Result type must be a class.")
-        self._registry.add(result_type)
+        self._registry.add(return_type)
 
-    def unregister(self, result_type):
+    def unregister(self, return_type):
         """
         Unregister a result type.
         """
-        if not isinstance(result_type, type):
+        if not isinstance(return_type, type):
             raise TypeError("Result type must be a class.")
-        self._registry.discard(result_type)
+        self._registry.discard(return_type)
 
     def __iter__(self):
         """
@@ -46,28 +46,28 @@ class ResultTypeRegistry:
         return iter(self._registry)
 
 
-result_type_registry = ResultTypeRegistry()
+return_type_registry = ResultTypeRegistry()
 
 
-def type_to_literal(result_type):
-    if result_type.__module__ == "builtins":
-        return result_type.__name__
+def type_to_literal(return_type):
+    if return_type.__module__ == "builtins":
+        return return_type.__name__
     else:
-        return f"{result_type.__module__}.{result_type.__name__}"
+        return f"{return_type.__module__}.{return_type.__name__}"
 
 
-def get_available_result_types() -> List[str]:
+def get_available_return_types() -> List[str]:
     """
     Get a list of available result types.
     """
-    return [type_to_literal(rt) for rt in result_type_registry]
+    return [type_to_literal(rt) for rt in return_type_registry]
 
 
-def result_type_from_literal(literal: str) -> Any:
+def return_type_from_literal(literal: str) -> Any:
     """
     Get a result type from its literal representation.
     """
-    for rt in result_type_registry:
+    for rt in return_type_registry:
         if type_to_literal(rt) == literal:
             return rt
     raise ValueError(f"Result type '{literal}' not found in registry.")

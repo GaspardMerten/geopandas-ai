@@ -22,7 +22,7 @@ class MagicReturnCore:
         if not self._code:
             self._code = build_code(
                 self.prompt,
-                memory.result_type,
+                memory.return_type,
                 memory.dfs,
                 user_provided_libraries=memory.user_provided_libraries,
             )
@@ -30,12 +30,10 @@ class MagicReturnCore:
         self.memory.log(prompt, self._code)
 
     def improve(self, prompt: str) -> Union["MagicReturn", Any]:
-        if hasattr(self.internal, "improve"):
-            return self.internal.improve(prompt)
         return magic_prompt_with_dataframes(
             prompt,
             *self.memory.dfs,
-            result_type=self.memory.result_type,
+            return_type=self.memory.return_type,
             user_provided_libraries=self.memory.user_provided_libraries,
             memory=self.memory,
         )
@@ -135,17 +133,17 @@ class MagicReturn(MagicReturnCore):
 def magic_prompt_with_dataframes(
     prompt: str,
     *dfs: List[GeoOrDataFrame],
-    result_type: Type = None,
+    return_type: Type = None,
     user_provided_libraries: List[str] = None,
     memory: Memory = None,
 ) -> Union[MagicReturn, Any]:
     dfs = dfs or []
-    result_type = result_type or determine_type(prompt)
+    return_type = return_type or determine_type(prompt)
     return MagicReturn(
         memory=memory
         or Memory(
             dfs=dfs,
-            result_type=result_type,
+            return_type=return_type,
             user_provided_libraries=user_provided_libraries,
             key=prompt,
         ),

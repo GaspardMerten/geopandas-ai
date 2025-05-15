@@ -1,7 +1,8 @@
-from typing import List, Any, Union
+from typing import List, Any, Union, Type
 
 from geopandas import GeoDataFrame
 
+from .types import GeoOrDataFrame
 from .code import MagicReturn, chat
 
 __all__ = ["GeoDataFrameAI"]
@@ -25,14 +26,14 @@ class GeoDataFrameAI(GeoDataFrame):
     def chat(
         self,
         prompt: str,
-        *other_dfs,
-        result_type=None,
+        *other_dfs: List[GeoOrDataFrame],
+        return_type: Type = None,
         user_provided_libraries: List[str] = None,
     ) -> Union[Any, MagicReturn]:
         self.state = chat(
             prompt,
             *([self] + list(other_dfs)),
-            result_type=result_type,
+            return_type=return_type,
             user_provided_libraries=user_provided_libraries,
         )
         self._memories.add(self.state.memory)

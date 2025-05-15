@@ -3,7 +3,7 @@ from typing import List, Type
 
 from .code import dfs_to_string
 from ...cache import get_from_cache, set_to_cache
-from ...result_type import type_to_literal
+from ...return_type import type_to_literal
 from ...types import GeoOrDataFrame
 
 
@@ -15,17 +15,17 @@ class Memory:
     def __init__(
         self,
         dfs: List[GeoOrDataFrame],
-        result_type: Type,
+        return_type: Type,
         key: str,
         user_provided_libraries: List[str] = None,
     ):
         self.dfs = dfs
-        self.result_type = result_type
+        self.return_type = return_type
         self._cache = dict()
         self.user_provided_libraries = user_provided_libraries or []
         self.history = []
         self.memory_cache_key = hashlib.sha256(
-            (dfs_to_string(dfs) + key + type_to_literal(result_type)).encode()
+            (dfs_to_string(dfs) + key + type_to_literal(return_type)).encode()
         ).hexdigest()
         self.restore_cache()
 

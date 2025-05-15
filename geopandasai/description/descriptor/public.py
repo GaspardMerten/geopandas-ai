@@ -1,3 +1,6 @@
+import geopandas
+import pandas as pd
+
 from .base import Descriptor
 
 
@@ -11,6 +14,10 @@ class PublicDataDescriptor(Descriptor):
 
     def describe(self, dataframe) -> str:
         description = ""
+        if isinstance(dataframe, pd.DataFrame):
+            description += "Type: DataFrame\n"
+        elif isinstance(dataframe, geopandas.GeoDataFrame):
+            description += "Type: GeoDataFrame\n"
         if hasattr(dataframe, "crs"):
             description += f"CRS: {dataframe.crs}\n"
         if hasattr(dataframe, "geometry"):

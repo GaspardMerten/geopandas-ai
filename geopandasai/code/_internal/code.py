@@ -4,7 +4,7 @@ from typing import List, Type, Union
 from .execute import execute_func
 from ...config import get_libraries
 from ...description import describe_dataframe
-from ...result_type import type_to_literal
+from ...return_type import type_to_literal
 from ...template import prompt_with_template, parse_template, Template
 from ...types import GeoOrDataFrame
 
@@ -32,7 +32,7 @@ def build_static_description(dfs, user_provided_libraries):
 
 def build_code(
     prompt: str,
-    result_type: Type,
+    return_type: Type,
     dfs: List[GeoOrDataFrame],
     user_provided_libraries: List[str] = None,
 ) -> Union[str, None]:
@@ -55,7 +55,7 @@ def build_code(
                 last_exception=last_exception,
                 libraries=libraries_str,
                 prompt=prompt,
-                return_type=type_to_literal(result_type),
+                return_type=type_to_literal(return_type),
                 dfs=dfs_string,
                 dataset_description=dataset_description,
             )
@@ -71,7 +71,7 @@ def build_code(
                 libraries=libraries_str,
                 prompt=prompt,
                 dfs=dfs_string,
-                return_type=type_to_literal(result_type),
+                return_type=type_to_literal(return_type),
                 dataset_description=dataset_description,
             )
 
