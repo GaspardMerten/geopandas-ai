@@ -1,6 +1,6 @@
 import json
 import re
-from typing import Callable
+from typing import Callable, Optional
 
 import ipynbname
 
@@ -11,7 +11,7 @@ class JupyterCodeInjector(ACodeInjector):
     def inject(
         self,
         pattern: re.Pattern,
-        function_call: Callable[[re.Match], str],
+        function_call: Callable[[Optional[re.Match]], str],
         import_statement: str,
     ):
         from IPython import get_ipython

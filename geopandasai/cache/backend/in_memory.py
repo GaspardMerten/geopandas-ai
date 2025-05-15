@@ -16,3 +16,6 @@ class InMemoryCacheBackend(CacheBackend):
     def clear_cache(self, key: str) -> None:
         if key in self.cache:
             del self.cache[key]
+
+    def reset_cache(self) -> None:
+        self.cache.clear()

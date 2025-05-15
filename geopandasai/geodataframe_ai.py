@@ -19,7 +19,8 @@ class GeoDataFrameAI(GeoDataFrame):
         Initialize the GeoDataFrameAI class.
         """
         super().__init__(*args, **kwargs)
-        self.last_output: Union[MagicReturn, Any] = None
+        self.state: Union[MagicReturn, Any] = None
+        self._memories = set()
 
     def chat(
         self,
@@ -28,40 +29,41 @@ class GeoDataFrameAI(GeoDataFrame):
         result_type=None,
         user_provided_libraries: List[str] = None,
     ) -> Union[Any, MagicReturn]:
-        self.last_output = chat(
+        self.state = chat(
             prompt,
             *([self] + list(other_dfs)),
             result_type=result_type,
             user_provided_libraries=user_provided_libraries,
         )
-        return self.last_output.materialize()
+        self._memories.add(self.state.memory)
+        return self.state.materialize()
 
     def improve(self, prompt: str) -> Any:
-        if self.last_output is None:
+        if self.state is None:
             raise ValueError("No code has been generated yet. Please run a chat first.")
-        return self.last_output.chat(prompt).materialize()
+        return self.state.improve(prompt).materialize()
 
     @property
     def code(self) -> str:
-        if self.last_output is None:
+        if self.state is None:
             raise ValueError("No code has been generated yet. Please run a chat first.")
-        return self.last_output.code
+        return self.state.code
 
     def inspect(self) -> str:
         """
         Inspect the last output.
         """
-        if self.last_output is None:
+        if self.state is None:
             raise ValueError("No code has been generated yet. Please run a chat first.")
-        return self.last_output.inspect()
+        return self.state.inspect()
 
     def print_history(self) -> List[str]:
         """
         Print the history of the last output.
         """
-        if self.last_output is None:
+        if self.state is None:
             raise ValueError("No code has been generated yet. Please run a chat first.")
-        return self.last_output.print_history()
+        return self.state.print_history()
 
     @staticmethod
     def from_geodataframe(gdf: GeoDataFrame) -> "GeoDataFrameAI":
@@ -72,3 +74,11 @@ class GeoDataFrameAI(GeoDataFrame):
             return GeoDataFrameAI(gdf)
         else:
             return GeoDataFrameAI(GeoDataFrame(gdf))
+
+    def reset(self):
+        """
+        Reset the state of the GeoDataFrameAI.
+        """
+        self.state = None
+        for memory in self._memories:
+            memory.reset()

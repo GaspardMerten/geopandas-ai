@@ -1,6 +1,6 @@
 import inspect
 import re
-from typing import Callable
+from typing import Callable, Optional
 
 from .base import ACodeInjector
 
@@ -9,7 +9,7 @@ class PythonCodeInjector(ACodeInjector):
     def inject(
         self,
         pattern: re.Pattern,
-        function_call_builder: Callable[[re.Match], str],
+        function_call_builder: Callable[[Optional[re.Match]], str],
         import_statement: str,
     ):
         frame = inspect.currentframe()

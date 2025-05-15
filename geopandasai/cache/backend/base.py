@@ -20,3 +20,9 @@ class CacheBackend(abc.ABC):
         Clear the cached result for the given key.
         """
         pass
+
+    def reset_cache(self) -> None:
+        """
+        Reset the cache.
+        """
+        pass

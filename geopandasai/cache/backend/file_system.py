@@ -25,3 +25,12 @@ class FileSystemCacheBackend(CacheBackend):
             os.remove(os.path.join(self.cache_dir, key))
         except FileNotFoundError:
             pass
+
+    def reset_cache(self) -> None:
+        for filename in os.listdir(self.cache_dir):
+            file_path = os.path.join(self.cache_dir, filename)
+            try:
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+            except Exception as e:
+                print(f"Error deleting file {file_path}: {e}")

@@ -14,4 +14,11 @@ def execute_func(code: str, *dfs: Iterable[GeoOrDataFrame]):
         spec = importlib.util.spec_from_file_location("output", f.name)
         output_module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(output_module)
-        return output_module.execute(*dfs)
+        result = output_module.execute(*dfs)
+
+        if isinstance(result, GeoOrDataFrame):
+            from ... import GeoDataFrameAI
+
+            result = GeoDataFrameAI(result)
+
+        return result

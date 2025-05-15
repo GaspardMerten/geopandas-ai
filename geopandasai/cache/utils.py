@@ -50,3 +50,9 @@ def cache(func):
         return result
 
     return wrapped
+
+
+def reset_cache():
+    instance = _get_cache_instance()
+    if instance:
+        instance.reset_cache()

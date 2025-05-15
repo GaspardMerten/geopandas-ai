@@ -29,7 +29,9 @@ class MagicReturnCore:
 
         self.memory.log(prompt, self._code)
 
-    def chat(self, prompt: str) -> Union["MagicReturn", Any]:
+    def improve(self, prompt: str) -> Union["MagicReturn", Any]:
+        if hasattr(self.internal, "improve"):
+            return self.internal.improve(prompt)
         return magic_prompt_with_dataframes(
             prompt,
             *self.memory.dfs,
@@ -37,6 +39,10 @@ class MagicReturnCore:
             user_provided_libraries=self.memory.user_provided_libraries,
             memory=self.memory,
         )
+
+    def materialize(self) -> Any:
+        self._build()
+        return self
 
     def reset(self):
         self.memory.reset()
@@ -62,10 +68,6 @@ class MagicReturnCore:
                 ),
             )
             super().__setattr__("_did_execute", True)
-
-    def materialize(self):
-        self._build()
-        return self
 
 
 class MagicReturn(MagicReturnCore):

@@ -1,19 +1,25 @@
 import os
 import re
 from functools import partial
+from typing import Optional
 
 from .. import constants
 from .injectors.factory import code_inject_factory
 from .regex import inject_code_pattern
 
 
-def function_call_builder(match: re.Match, module_name: str, function_name: str):
+def function_call_builder(
+    match: Optional[re.Match], module_name: str, function_name: str
+):
     """
     Build the function call string.
     """
-    args = [match.group(1)]
-    if match.group(3):
-        args += match.group(3).split(",")
+    if match:
+        args = [match.group(1)]
+        if match.group(3):
+            args += match.group(3).split(",")
+    else:
+        args = ["gdf1, gdf2, ..."]
 
     return f"{module_name}.{function_name}({', '.join(args)})"
 
