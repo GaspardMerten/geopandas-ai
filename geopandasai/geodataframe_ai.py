@@ -2,8 +2,8 @@ from typing import List, Any, Union, Type
 
 from geopandas import GeoDataFrame
 
-from .types import GeoOrDataFrame
 from .code import MagicReturn, chat
+from .types import GeoOrDataFrame
 
 __all__ = ["GeoDataFrameAI"]
 
@@ -20,8 +20,25 @@ class GeoDataFrameAI(GeoDataFrame):
         Initialize the GeoDataFrameAI class.
         """
         super().__init__(*args, **kwargs)
+        # User provided description through the describe method
+        self.ai_description = None
+
+        # The state of the conversation, calling chat initializes this
+        # while calling improve will update the state.
         self.state: Union[MagicReturn, Any] = None
+
+        # A helper storing previous conversation to ensure the reset
+        # method delete entire conversation history, even if multiple
+        # '.chat' were called.
         self._memories = set()
+
+    def set_description(self, description: str):
+        """
+        Describe the GeoDataFrameAI. This is a user-provided description that
+        can be used to provide context for the AI.
+        """
+        self.ai_description = description
+        return self
 
     def chat(
         self,
@@ -65,16 +82,6 @@ class GeoDataFrameAI(GeoDataFrame):
         if self.state is None:
             raise ValueError("No code has been generated yet. Please run a chat first.")
         return self.state.print_history()
-
-    @staticmethod
-    def from_geodataframe(gdf: GeoDataFrame) -> "GeoDataFrameAI":
-        """
-        Convert a GeoDataFrame or DataFrame to a GeoDataFrameAI.
-        """
-        if isinstance(gdf, GeoDataFrame):
-            return GeoDataFrameAI(gdf)
-        else:
-            return GeoDataFrameAI(GeoDataFrame(gdf))
 
     def reset(self):
         """

@@ -1,7 +1,8 @@
-import geopandas
+import geopandas as gpd
 import pandas as pd
 
 from .base import Descriptor
+from ...return_type import type_to_literal
 
 
 class PublicDataDescriptor(Descriptor):
@@ -12,21 +13,27 @@ class PublicDataDescriptor(Descriptor):
     This means that private data can be shared with the AI.
     """
 
-    def describe(self, dataframe) -> str:
+    def describe(self, instance) -> str:
         description = ""
-        if isinstance(dataframe, pd.DataFrame):
-            description += "Type: DataFrame\n"
-        elif isinstance(dataframe, geopandas.GeoDataFrame):
-            description += "Type: GeoDataFrame\n"
-        if hasattr(dataframe, "crs"):
-            description += f"CRS: {dataframe.crs}\n"
-        if hasattr(dataframe, "geometry"):
-            description += f"Geometry: {dataframe.geometry.name}\n"
-        if hasattr(dataframe, "index"):
-            description += f"Index: {dataframe.index}\n"
-        description += f"Shape: {dataframe.shape}\n"
-        description += f"Columns (with types): {' - '.join([f'{col} ({dataframe[col].dtype})' for col in dataframe.columns])}\n"
-        description += f"Statistics:\n{dataframe.describe()}\n\n"
-        description += f"First 5 rows:\n{dataframe.head()}\n\n"
+        description += f"Type: {type_to_literal(type(instance))}\n"
+
+        if isinstance(instance, gpd.GeoDataFrame):
+            if hasattr(instance, "crs"):
+                description += f"CRS: {instance.crs}\n"
+            if hasattr(instance, "geometry"):
+                geometry_type = instance.geometry.geom_type
+                description += f"Geometry type (geometry column):{', '.join(geometry_type.unique())}"
+
+        if isinstance(instance, pd.DataFrame):
+            if hasattr(instance, "index"):
+                description += f"Index: {instance.index}\n"
+
+            description += f"Shape: {instance.shape}\n"
+            description += f"Columns (with types): {' - '.join([f'{col} ({instance[col].dtype})' for col in instance.columns])}\n"
+            description += f"Statistics:\n{instance.describe()}\n\n"
+            description += f"First 5 rows:\n{instance.head()}\n\n"
+
+        if hasattr(instance, "ai_description") and instance.ai_description:
+            description += f"User provided description: {instance.ai_description}\n\n"
 
         return description
