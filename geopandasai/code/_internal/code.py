@@ -2,6 +2,7 @@ import traceback
 from typing import List, Type, Union
 
 from .execute import execute_func
+from .samples import SAMPLES
 from ...config import get_libraries
 from ...description import describe_dataframe
 from ...return_type import type_to_literal
@@ -73,6 +74,7 @@ def build_code(
                 dfs=dfs_string,
                 return_type=type_to_literal(return_type),
                 dataset_description=dataset_description,
+                tips=SAMPLES,
             )
 
             last_code = prompt_with_template(

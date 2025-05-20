@@ -27,6 +27,8 @@ class FileSystemCacheBackend(CacheBackend):
             pass
 
     def reset_cache(self) -> None:
+        if not os.path.exists(self.cache_dir):
+            return
         for filename in os.listdir(self.cache_dir):
             file_path = os.path.join(self.cache_dir, filename)
             try:

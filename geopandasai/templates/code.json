@@ -7,11 +7,15 @@
     },
     {
       "role": "user",
+      "content": "Here are some tips and information to help you write the code: {{tips}}"
+    },
+    {
+      "role": "user",
       "content": "Here is a prompt: {{prompt}}"
     },
     {
       "role": "user",
-      "content": "Here are the libraries I can use: {{libraries}} "
+      "content": "Here are the non-default libraries you can use: {{libraries}} "
     },
     {
       "role": "user",

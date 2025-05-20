@@ -59,7 +59,8 @@ class GeoDataFrameAI(GeoDataFrame):
     def improve(self, prompt: str) -> Any:
         if self.state is None:
             raise ValueError("No code has been generated yet. Please run a chat first.")
-        return self.state.improve(prompt).materialize()
+        self.state = self.state.improve(prompt)
+        return self.state.materialize()
 
     @property
     def code(self) -> str:
@@ -68,14 +69,6 @@ class GeoDataFrameAI(GeoDataFrame):
         return self.state.code
 
     def inspect(self) -> str:
-        """
-        Inspect the last output.
-        """
-        if self.state is None:
-            raise ValueError("No code has been generated yet. Please run a chat first.")
-        return self.state.inspect()
-
-    def print_history(self) -> List[str]:
         """
         Print the history of the last output.
         """
@@ -90,3 +83,11 @@ class GeoDataFrameAI(GeoDataFrame):
         self.state = None
         for memory in self._memories:
             memory.reset()
+
+    def inject(self, function_name: str, ai_module="ai", ai_module_path="ai"):
+        """
+        Inject the state of the GeoDataFrameAI into the current context.
+        """
+        if self.state is None:
+            raise ValueError("No code has been generated yet. Please run a chat first.")
+        return self.state.inject(function_name, ai_module, ai_module_path)

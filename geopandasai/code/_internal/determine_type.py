@@ -7,7 +7,7 @@ from ...template import parse_template, Template, prompt_with_template
 
 
 @cache
-def determine_type(prompt: str) -> Type:
+def determine_type(prompt: str, attempt: int = 0) -> Type:
     """
     A function to determine the type of prompt based on its content.
     It returns either "TEXT" or "CHART".
@@ -27,9 +27,17 @@ def determine_type(prompt: str) -> Type:
     match = re.findall(regex, result, re.DOTALL | re.MULTILINE)
 
     if not match:
-        raise ValueError("The response does not match the expected format.")
+        if attempt < 3:
+            # Retry with a different prompt
+            return determine_type(
+                prompt + " " + "Please ensure your answer matches this regex: " + regex,
+                attempt=attempt + 1,
+            )
+        else:
+            raise ValueError(
+                f"Invalid response from the LLM. Please check your prompt. Response: {result}"
+            )
 
     # Extract the code snippet from the response
     return_type = match[0]
-
     return return_type_from_literal(return_type)
