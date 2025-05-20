@@ -20,12 +20,11 @@ class PrintCodeInjector(ACodeInjector):
         )
         print("First add, if not already present, the following import statement:")
         print(
-            f"{colorama.Fore.CYAN}{colorama.Style.BRIGHT}import {import_statement}{colorama.Style.RESET_ALL}"
+            f"{colorama.Fore.CYAN}{colorama.Style.BRIGHT}{import_statement}{colorama.Style.RESET_ALL}"
         )
         print(
             f"{colorama.Fore.YELLOW}Then replace the following code with the function call:{colorama.Style.RESET_ALL}"
         )
         print(
-            f"{colorama.Fore.CYAN}{colorama.Style.BRIGHT}{function_call(None
-            )}{colorama.Style.RESET_ALL}"
+            f"{colorama.Fore.CYAN}{colorama.Style.BRIGHT}{function_call(None)}{colorama.Style.RESET_ALL}"
         )
