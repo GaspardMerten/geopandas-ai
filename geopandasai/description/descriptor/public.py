@@ -33,8 +33,6 @@ class PublicDataDescriptor(Descriptor):
             description += f"Statistics:\n{instance.describe()}\n\n"
             description += f"First 5 rows:\n{instance.head()}\n\n"
             description += f"Last 5 rows:\n{instance.tail()}\n\n"
-            random_sample = instance.sample(5)
-            description += f"Random sample:\n{random_sample}\n\n"
         if hasattr(instance, "ai_description") and instance.ai_description:
             description += f"User provided description: {instance.ai_description}\n\n"
 
