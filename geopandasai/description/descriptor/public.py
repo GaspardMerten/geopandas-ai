@@ -4,6 +4,8 @@ import pandas as pd
 from .base import Descriptor
 from ...return_type import type_to_literal
 
+from types import MethodType
+
 
 class PublicDataDescriptor(Descriptor):
     """
@@ -31,8 +33,14 @@ class PublicDataDescriptor(Descriptor):
             description += f"Shape: {instance.shape}\n"
             description += f"Columns (with types): {' - '.join([f'{col} ({instance[col].dtype})' for col in instance.columns])}\n"
             description += f"Statistics:\n{instance.describe()}\n\n"
-            description += f"First 5 rows:\n{instance.head()}\n\n"
-            description += f"Last 5 rows:\n{instance.tail()}\n\n"
+            if hasattr(instance, "artificial_data_generator") and isinstance(getattr(instance, "artificial_data_generator"), MethodType):
+                try:
+                    description += f"First 5 rows:\n{instance.artificial_data_generator()}\n\n"
+                except:
+                    raise RuntimeError("the artificial_data_generator provided could not return a meaningfull string")
+            else:
+                description += f"First 5 rows:\n{instance.head()}\n\n"
+                description += f"Last 5 rows:\n{instance.tail()}\n\n"
         if hasattr(instance, "ai_description") and instance.ai_description:
             description += f"User provided description: {instance.ai_description}\n\n"
 

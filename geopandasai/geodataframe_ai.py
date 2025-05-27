@@ -1,4 +1,4 @@
-from typing import List, Any, Union, Type
+from typing import Callable, List, Any, Union, Type
 
 from geopandas import GeoDataFrame
 
@@ -39,6 +39,13 @@ class GeoDataFrameAI(GeoDataFrame):
         """
         self.ai_description = description
         return self
+
+    def set_artificial_data_generator(self, f: Callable): 
+        """
+        Set an artificial_data_generator to prevent forwarding real data to the AI 
+        service.
+        """
+        self.artificial_data_generator = f
 
     def chat(
         self,
