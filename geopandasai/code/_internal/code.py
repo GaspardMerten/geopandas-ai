@@ -81,7 +81,7 @@ def build_code(
                 template, remove_markdown_code_limiter=True
             )
         try:
-            execute_func(last_code, *dfs)
+            execute_func(last_code, return_type, *dfs)
             response = last_code
             break
         except Exception as e:

@@ -62,7 +62,8 @@ class MagicReturnCore:
                 "_internal",
                 execute_func(
                     self._code,
-                    *self.memory.dfs,
+                    self.memory.return_type,
+                    *self.memory.dfs
                 ),
             )
             super().__setattr__("_did_execute", True)
