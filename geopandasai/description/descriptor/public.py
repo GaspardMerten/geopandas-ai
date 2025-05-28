@@ -37,8 +37,8 @@ class PublicDataDescriptor(Descriptor):
                 try:
                     description += f"First 5 rows:\n{instance.artificial_data_generator()}\n\n"
                 except:
-                    raise RuntimeError("the artificial_data_generator provided could not return a meaningfull string")
-            else:
+                    raise RuntimeError("the artificial_data_generator provided by the user could not return a meaningful string")
+            elif (not hasattr(instance, "use_df_excerpt")) or self.use_df_excerpt:
                 description += f"First 5 rows:\n{instance.head()}\n\n"
                 description += f"Last 5 rows:\n{instance.tail()}\n\n"
         if hasattr(instance, "ai_description") and instance.ai_description:

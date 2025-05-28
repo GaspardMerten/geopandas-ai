@@ -47,6 +47,13 @@ class GeoDataFrameAI(GeoDataFrame):
         """
         self.artificial_data_generator = f
 
+    def set_use_df_excerpt(self, b: bool):
+        """
+        Defines whether an excerpt of the DF should be sent to the AI service.
+        This behaviour is overridden by the artificial_data_generator attribute. 
+        """
+        self.use_df_excerpt = b
+
     def chat(
         self,
         prompt: str,
