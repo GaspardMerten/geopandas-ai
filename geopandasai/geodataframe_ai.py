@@ -98,7 +98,7 @@ class GeoDataFrameAI(GeoDataFrame):
 
         self.state = self.state.improve(
             prompt,
-            *([self] + list(other_dfs)),
+            *(self.state.memory.dfs if not other_dfs else ([self] + list(other_dfs))),
             return_type=return_type,
             provided_libraries=provided_libraries,
         )
