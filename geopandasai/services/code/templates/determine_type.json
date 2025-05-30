@@ -1,0 +1,13 @@
+{
+  "max_tokens": 30,
+  "messages": [
+    {
+      "role": "user",
+      "content": "{{ prompt }}"
+    },
+    {
+      "role": "user",
+      "content": "Please ensure your output matches this regex: {{regex}}. Which of the following type of result should a code answering the prompt return? You must choose between {{ choices }}, knowing that the function is deterministic and hence, should not effectuate any in place operations on arguments, only answer with the type between <Type> and </Type> tags."
+    }
+  ]
+}

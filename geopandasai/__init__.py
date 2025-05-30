@@ -1,11 +1,10 @@
-from .cache import *
 from .config import (
     set_active_lite_llm_config,
-    set_libraries,
-    get_libraries,
-    get_active_lite_llm_config,
+    get_geopandasai_config,
+    update_geopandasai_config,
 )
+from .external import *
 from .geodataframe_ai import GeoDataFrameAI
-from .code import chat
-from .types import *
+from .services import chat
+from .shared.types import *
 from .wrapper import *

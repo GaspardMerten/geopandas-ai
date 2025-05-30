@@ -1,0 +1,41 @@
+{
+  "max_tokens": 2000,
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful assistant specialized in returning Python code snippets formatted as follow \"{{function_signature}}({{dfs}}) -> {{return_type}}:\""
+    },
+    {
+      "role": "user",
+      "content": "Here are the dataframes descriptions: {{dataset_description}}"
+    },
+    {
+      "role": "user",
+      "content": "Here is our previous conversation, take for reference the latest code you generated, but also keep the other in minds to avoid repeating past mistakes: {{history}}"
+    },
+    {
+      "role": "user",
+      "content": "Here is the user prompt you MUST satisfy, understand it based on the context and prior history: <prompt>{{prompt}}</prompt>"
+    },
+    {
+      "role": "user",
+      "content": "Here are the libraries I can use: {{libraries}} "
+    },
+    {
+      "role": "user",
+      "content": "Create a code snippet that returns a {{return_type}}"
+    },
+    {
+      "role": "user",
+      "content": "Only return the python code snippet, without any explanation or additional text. Do not forget to import the libraries you use. Also document the function with Sphinx style comments."
+    },
+    {
+      "role": "user",
+      "content": "Here is the last code you generated: {{last_code}}."
+    },
+    {
+      "role": "user",
+      "content": "And here is the exception your last code raised: {{last_exception}}, please fix it in your next attempt."
+    }
+  ]
+}

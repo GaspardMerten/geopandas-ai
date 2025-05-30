@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "geopandas-ai"
-version = "0.0.23"
+version = "0.0.24"
 description = "GeoPandas AI is an extension of GeoPandas allowing you to interact with your spatial data in natural language."
 readme = "README.md"
 authors = [
@@ -24,7 +24,8 @@ dependencies = [
     "litellm",
     "ipynbname",
     "colorama",
-    "contextily"
+    "contextily",
+    "dependency-injector"
 ]
 
 [project.urls]
