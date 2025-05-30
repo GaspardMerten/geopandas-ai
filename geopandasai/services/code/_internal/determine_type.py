@@ -20,7 +20,7 @@ def determine_type(prompt: str, attempt: int = 0) -> Type:
     It returns either "TEXT" or "CHART".
     """
     choices = get_available_return_types()
-    regex = f"<Type>({'|'.join(choices)})</Type>"
+    regex = f"({'|'.join(choices)})"
 
     result = prompt_with_template(
         parse_template(
