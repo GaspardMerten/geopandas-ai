@@ -1,3 +1,5 @@
+<img src="https://raw.githubusercontent.com/GaspardMerten/geopandas-ai/main/logo.avif" alt="GeoPandas AI Logo" width="200">
+
 # GeoPandas AI
 
 GeoPandas AI is a powerful Python library that brings natural language processing capabilities to your geospatial data
