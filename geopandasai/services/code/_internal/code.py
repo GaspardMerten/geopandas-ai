@@ -26,9 +26,9 @@ def dfs_to_string(dfs: List[GeoOrDataFrame]) -> str:
 def build_static_description(dfs, user_provided_libraries):
     from ....config import get_geopandasai_config
 
-    libraries = list(
+    libraries = sorted(list(
         set((user_provided_libraries or []) + get_geopandasai_config().libraries)
-    )
+    ))
     libraries_str = ", ".join(libraries)
     dataset_description = dfs_to_string(dfs)
     df_args = ", ".join([f"df_{i + 1}" for i in range(len(dfs))])
