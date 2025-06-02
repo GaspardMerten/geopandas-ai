@@ -117,7 +117,7 @@ class GeoDataFrameAI(GeoDataFrame):
         """
         if self.state is None:
             raise ValueError("No code has been generated yet. Please run a chat first.")
-        return self.state.print_history()
+        return self.state.inspect()
 
     def reset(self):
         """

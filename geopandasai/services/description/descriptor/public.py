@@ -41,10 +41,11 @@ class PublicDataDescriptor(ADescriptor):
             description += f"Columns (with types): {' - '.join([f'{col} ({instance[col].dtype})' for col in instance.columns])}\n"
             description += f"Statistics:\n{instance.describe()}\n\n"
 
-            rows = instance.sample(
-                min(len(instance), self.sample_rows), random_state=42
+            numbers_of_rows_to_sample = min(len(instance), self.sample_rows)
+            rows = instance.sample(numbers_of_rows_to_sample, random_state=42)
+            description += (
+                f"Randomly sampled rows ({numbers_of_rows_to_sample} rows):\n"
             )
-            description += f"Randomly sampled rows (first {self.sample_rows} rows):\n"
             description += rows.to_string(index=False, max_colwidth=100) + "\n\n"
         if hasattr(instance, "ai_description") and instance.ai_description:
             description += f"User provided description: {instance.ai_description}\n\n"

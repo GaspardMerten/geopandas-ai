@@ -2,14 +2,14 @@ import re
 from typing import Type
 
 from ....external.cache import cache
-from ....shared.return_type import (
-    get_available_return_types,
-    return_type_from_literal,
-)
 from ....services.code.template import (
     parse_template,
     Template,
     prompt_with_template,
+)
+from ....shared.return_type import (
+    get_available_return_types,
+    return_type_from_literal,
 )
 
 
@@ -29,16 +29,18 @@ def determine_type(prompt: str, attempt: int = 0) -> Type:
     )
 
     if not result:
-        raise ValueError("Invalid response from the LLM. Please check your prompt.")
+        raise ValueError(
+            "The LLM was not able to determine the type. Please check your prompt or specify the type manually."
+        )
 
     # Check if the response matches the expected format
     match = re.findall(regex, result, re.DOTALL | re.MULTILINE)
 
     if not match:
-        if attempt < 3:
+        if attempt < 5:
             # Retry with a different prompt
             return determine_type(
-                prompt,
+                prompt + "; You did not provide a valid answer. Please try again.",
                 attempt=attempt + 1,
             )
         else:

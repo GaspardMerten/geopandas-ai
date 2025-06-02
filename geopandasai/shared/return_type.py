@@ -14,7 +14,8 @@ def get_available_return_types() -> List[str]:
     """
     from ..config import get_geopandasai_config
 
-    return [type_to_literal(rt) for rt in get_geopandasai_config().return_types]
+    types = [type_to_literal(rt) for rt in get_geopandasai_config().return_types]
+    return sorted(types)
 
 
 def return_type_from_literal(literal: str) -> Any:

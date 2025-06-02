@@ -29,6 +29,9 @@ def build_static_description(dfs, user_provided_libraries):
     libraries = list(
         set((user_provided_libraries or []) + get_geopandasai_config().libraries)
     )
+    # To maintain consistency, we sort the libraries alphabetically
+    libraries.sort()
+
     libraries_str = ", ".join(libraries)
     dataset_description = dfs_to_string(dfs)
     df_args = ", ".join([f"df_{i + 1}" for i in range(len(dfs))])
@@ -97,7 +100,7 @@ def build_code(
             response = last_code
             break
         except Exception as e:
-            last_exception = f"{e}, {traceback.format_exc()}"
+            last_exception = traceback.format_exc()
 
     if not response:
         raise ValueError(

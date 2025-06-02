@@ -27,7 +27,7 @@
     },
     {
       "role": "user",
-      "content": "Create a code snippet that returns a {{return_type}}"
+      "content": "Create a code snippet that returns a {{return_type}}, don't forget to import the type itself if needed."
     },
     {
       "role": "user",

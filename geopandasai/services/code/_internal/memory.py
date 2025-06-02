@@ -13,14 +13,13 @@ def build_key_for_prompt(prompt: str) -> str:
 
 
 @dataclass
-class Entry:
+class EntryInput:
     prompt: str
     return_type: Type
     provided_libraries: List[str]
-    code: Optional[str] = None
 
     def as_string(self) -> str:
-        return f"{self.prompt} | {self.return_type} | {self.provided_libraries}"
+        return f"{self.prompt} | {type_to_literal(self.return_type)} | {', '.join(sorted(self.provided_libraries))}"
 
 
 class Memory:
@@ -35,7 +34,7 @@ class Memory:
         self.return_type = return_type
         self._cache = dict()
         self.provided_libraries = provided_libraries or []
-        self.history: List[Entry] = []
+        self.history: List[EntryInput] = []
         self.memory_cache_key = hashlib.sha256(
             (dfs_to_string(dfs) + key + type_to_literal(return_type)).encode()
         ).hexdigest()
@@ -47,12 +46,12 @@ class Memory:
     def flush_cache(self):
         set_to_cache(self.memory_cache_key, self._cache)
 
-    def log(self, entry: Entry) -> None:
+    def log(self, entry: EntryInput, code: str) -> None:
         self.history.append(entry)
-        self._cache[self.build_current_history_key()] = entry.code
+        self._cache[self.build_current_history_key()] = code
         self.flush_cache()
 
-    def build_current_history_key(self, new_entry: Optional[Entry] = None) -> str:
+    def build_current_history_key(self, new_entry: Optional[EntryInput] = None) -> str:
         return build_key_for_prompt(
             "".join(
                 [
@@ -76,7 +75,7 @@ class Memory:
             + "</History>"
         )
 
-    def get_code_for_entry(self, entry: Entry) -> Optional[str]:
+    def get_code_for_entry(self, entry: EntryInput) -> Optional[str]:
         key = self.build_current_history_key(entry)
         return self._cache.get(key)
 

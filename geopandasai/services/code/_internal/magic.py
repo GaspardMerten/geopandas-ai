@@ -5,7 +5,7 @@ import colorama
 from .code import build_code
 from .determine_type import determine_type
 from .execute import execute_func
-from .memory import Memory, Entry
+from .memory import Memory, EntryInput
 from ...inject import inject_code
 from ....shared.types import GeoOrDataFrame
 
@@ -27,7 +27,7 @@ class MagicReturnCore:
         self.prompt = prompt
 
         self._code = memory.get_code_for_entry(
-            Entry(
+            EntryInput(
                 prompt=prompt,
                 return_type=self.memory.return_type,
                 provided_libraries=memory.provided_libraries,
@@ -41,12 +41,12 @@ class MagicReturnCore:
         )
 
         self.memory.log(
-            Entry(
+            EntryInput(
                 prompt=prompt,
                 return_type=self.memory.return_type,
                 provided_libraries=memory.provided_libraries,
-                code=self._code,
-            )
+            ),
+            code=self._code,
         )
 
     def improve(
@@ -133,7 +133,7 @@ class MagicReturn(MagicReturnCore):
     Extended class that adds inspectability, print utilities, and rich Python object proxying.
     """
 
-    def print_history(self) -> "MagicReturn":
+    def inspect(self) -> "MagicReturn":
         """
         Prints the full prompt/code history with syntax coloring.
 
@@ -151,13 +151,6 @@ class MagicReturn(MagicReturnCore):
             )
             print(f"{colorama.Fore.YELLOW}{'-' * 80}")
         return self
-
-    def inspect(self) -> List:
-        """
-        :return: Raw memory history as a list of (prompt, code) tuples.
-        :rtype: List
-        """
-        return list(self.memory.history)
 
     def inject(
         self,

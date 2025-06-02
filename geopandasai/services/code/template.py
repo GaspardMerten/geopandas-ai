@@ -1,5 +1,6 @@
 import enum
 import json
+import logging
 import re
 from dataclasses import dataclass
 from typing import List, Dict
@@ -7,6 +8,9 @@ from typing import List, Dict
 from litellm import completion
 
 __all__ = ["prompt_with_template", "parse_template", "Template", "sanitize_text"]
+
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -32,6 +36,15 @@ def prompt_with_template(
 
     if remove_markdown_code_limiter:
         output = re.sub(r"```[a-zA-Z]*", "", output)
+
+    logger.debug(
+        f"Prompted with template"
+        + "\n\n"
+        + json.dumps(template.messages, indent=2)
+        + "\n\n"
+        + "Response: "
+        + output
+    )
 
     return output
 

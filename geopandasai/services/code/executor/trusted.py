@@ -20,7 +20,7 @@ class TrustedCodeExecutor(ACodeExecutor):
 
             if not isinstance(result, return_type):
                 raise TypeError(
-                    f"Expected return type {return_type}, but got {type(result)}"
+                    f"Expected return type {return_type}, but got {type(result)}\n\nCode:\n\n{code}\n\n"
                 )
 
             if isinstance(result, GeoOrDataFrame):

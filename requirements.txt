@@ -10,4 +10,8 @@ colorama~=0.4.6
 contextily~=1.6.2
 branca~=0.8.1
 regex~=2024.11.6
-dependency-injector
+dependency-injector~=4.47.0
+numpy~=2.2.4
+shapely~=2.1.0
+Pygments~=2.19.1
+typing_extensions~=4.13.1
