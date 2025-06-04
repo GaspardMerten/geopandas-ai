@@ -111,13 +111,13 @@ class GeoDataFrameAI(GeoDataFrame):
             raise ValueError("No code has been generated yet. Please run a chat first.")
         return self.state.code
 
-    def inspect(self) -> "MagicReturn":
+    def inspect(self):
         """
         Print the history of the last output.
         """
         if self.state is None:
             raise ValueError("No code has been generated yet. Please run a chat first.")
-        return self.state.inspect()
+        self.state.inspect()
 
     def reset(self):
         """

@@ -28,3 +28,4 @@ class PrintCodeInjector(ACodeInjector):
         print(
             f"{colorama.Fore.CYAN}{colorama.Style.BRIGHT}{function_call(None)}{colorama.Style.RESET_ALL}"
         )
+        print("Make sure to adjust the function call with the correct parameters.")

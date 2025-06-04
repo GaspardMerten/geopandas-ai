@@ -133,24 +133,20 @@ class MagicReturn(MagicReturnCore):
     Extended class that adds inspectability, print utilities, and rich Python object proxying.
     """
 
-    def inspect(self) -> "MagicReturn":
+    def inspect(self):
         """
         Prints the full prompt/code history with syntax coloring.
-
-        :return: Self for chaining.
-        :rtype: MagicReturn
         """
         colorama.init(autoreset=True)
-        for i, (prompt, code) in enumerate(self.memory.history, start=1):
+        for i, (entry, code) in enumerate(self.memory.history, start=1):
             print(
-                f"{colorama.Fore.CYAN}{colorama.Style.BRIGHT}Prompt {i}:{colorama.Style.RESET_ALL} {prompt}"
+                f"{colorama.Fore.CYAN}{colorama.Style.BRIGHT}Prompt {i}:{colorama.Style.RESET_ALL} {entry.prompt}"
             )
             print(
                 f"{colorama.Fore.GREEN}{colorama.Style.BRIGHT}Code {i}:{colorama.Style.RESET_ALL}\n"
                 f"{colorama.Fore.GREEN}{code}"
             )
             print(f"{colorama.Fore.YELLOW}{'-' * 80}")
-        return self
 
     def inject(
         self,

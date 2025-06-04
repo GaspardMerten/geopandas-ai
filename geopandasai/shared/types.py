@@ -1,5 +1,4 @@
-from dataclasses import dataclass
-from typing import Dict, List, Union
+from typing import Union
 
 from geopandas import GeoDataFrame
 from pandas import DataFrame

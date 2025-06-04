@@ -9,7 +9,7 @@
       "role": "user",
       "content": "Here are some tips and information to help you write the code: {{tips}}"
     },
-        {
+    {
       "role": "user",
       "content": "Here are the dataframes descriptions: {{dataset_description}}"
     },

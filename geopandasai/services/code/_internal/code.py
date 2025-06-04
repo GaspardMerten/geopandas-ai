@@ -1,6 +1,8 @@
 import traceback
 from typing import List, Type, Union
 
+import matplotlib.pyplot as plt
+
 from .execute import execute_func
 from .samples import SAMPLES
 from ..template import (
@@ -100,7 +102,10 @@ def build_code(
             response = last_code
             break
         except Exception as e:
-            last_exception = traceback.format_exc()
+            last_exception = f"{str(e)}\n{traceback.format_exc()}"
+
+    # clear matplotlib cache to avoid memory issues
+    plt.close("all")
 
     if not response:
         raise ValueError(

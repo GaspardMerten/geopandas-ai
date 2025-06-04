@@ -1,6 +1,6 @@
 import hashlib
 from dataclasses import dataclass
-from typing import List, Type, Optional
+from typing import List, Type, Optional, Tuple
 
 from .code import dfs_to_string
 from ....external.cache import get_from_cache, set_to_cache
@@ -34,7 +34,7 @@ class Memory:
         self.return_type = return_type
         self._cache = dict()
         self.provided_libraries = provided_libraries or []
-        self.history: List[EntryInput] = []
+        self.history: List[Tuple[EntryInput, str]] = []
         self.memory_cache_key = hashlib.sha256(
             (dfs_to_string(dfs) + key + type_to_literal(return_type)).encode()
         ).hexdigest()
@@ -47,16 +47,21 @@ class Memory:
         set_to_cache(self.memory_cache_key, self._cache)
 
     def log(self, entry: EntryInput, code: str) -> None:
-        self.history.append(entry)
+        self.history.append((entry, code))
         self._cache[self.build_current_history_key()] = code
         self.flush_cache()
 
     def build_current_history_key(self, new_entry: Optional[EntryInput] = None) -> str:
+        previous_entries = list(map(lambda x: x[0], self.history))
         return build_key_for_prompt(
             "".join(
                 [
                     p.as_string()
-                    for p in ([*self.history, new_entry] if new_entry else self.history)
+                    for p in (
+                        previous_entries + [new_entry]
+                        if new_entry
+                        else previous_entries
+                    )
                 ]
             )
         )
@@ -68,8 +73,8 @@ class Memory:
             "<History>"
             + "\n".join(
                 [
-                    f"<Prompt>{item.prompt}</Prompt><Output>{item.return_type}</Output>"
-                    for item in self.history
+                    f"<Prompt>{item.prompt}</Prompt><Output>{code}</Output>"
+                    for (item, code) in self.history
                 ]
             )
             + "</History>"

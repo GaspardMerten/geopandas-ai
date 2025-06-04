@@ -4,9 +4,9 @@ from .geodataframe_ai import GeoDataFrameAI
 
 
 def read_file(
-        filename: str,
-        *args,
-        **kwargs,
+    filename: str,
+    *args,
+    **kwargs,
 ) -> GeoDataFrameAI:
     """
     Read a vector file (shapefile, GeoJSON, etc.) and return a GeoDataFrameAI.
@@ -15,9 +15,9 @@ def read_file(
 
 
 def read_parquet(
-        path: str,
-        *args,
-        **kwargs,
+    path: str,
+    *args,
+    **kwargs,
 ) -> GeoDataFrameAI:
     """
     Read a Parquet file and return a GeoDataFrameAI.
@@ -26,9 +26,9 @@ def read_parquet(
 
 
 def read_feather(
-        path: str,
-        *args,
-        **kwargs,
+    path: str,
+    *args,
+    **kwargs,
 ) -> GeoDataFrameAI:
     """
     Read a Feather file and return a GeoDataFrameAI.
@@ -37,10 +37,10 @@ def read_feather(
 
 
 def read_postgis(
-        sql: str,
-        con,
-        *args,
-        **kwargs,
+    sql: str,
+    con,
+    *args,
+    **kwargs,
 ) -> GeoDataFrameAI:
     """
     Read data from a PostGIS-enabled database and return a GeoDataFrameAI.
@@ -49,9 +49,9 @@ def read_postgis(
 
 
 def read_fileobj(
-        fileobj,
-        *args,
-        **kwargs,
+    fileobj,
+    *args,
+    **kwargs,
 ) -> GeoDataFrameAI:
     """
     Read a file-like object and return a GeoDataFrameAI.
@@ -60,9 +60,9 @@ def read_fileobj(
 
 
 def read_arrow(
-        source,
-        *args,
-        **kwargs,
+    source,
+    *args,
+    **kwargs,
 ) -> GeoDataFrameAI:
     """
     Read Arrow (e.g. pyarrow.Table) data and return a GeoDataFrameAI.
@@ -72,10 +72,10 @@ def read_arrow(
 
 # Fonctions d’écriture
 def to_parquet(
-        gdf: GeoDataFrameAI,
-        path: str,
-        *args,
-        **kwargs,
+    gdf: GeoDataFrameAI,
+    path: str,
+    *args,
+    **kwargs,
 ) -> None:
     """
     Write a GeoDataFrameAI to a Parquet file.
@@ -84,10 +84,10 @@ def to_parquet(
 
 
 def to_feather(
-        gdf: GeoDataFrameAI,
-        path: str,
-        *args,
-        **kwargs,
+    gdf: GeoDataFrameAI,
+    path: str,
+    *args,
+    **kwargs,
 ) -> None:
     """
     Write a GeoDataFrameAI to a Feather file.
@@ -96,10 +96,10 @@ def to_feather(
 
 
 def to_file(
-        gdf: GeoDataFrameAI,
-        filename: str,
-        *args,
-        **kwargs,
+    gdf: GeoDataFrameAI,
+    filename: str,
+    *args,
+    **kwargs,
 ) -> None:
     """
     Write a GeoDataFrameAI to a file (shapefile, GeoPackage, GeoJSON, etc.).
@@ -108,11 +108,11 @@ def to_file(
 
 
 def to_postgis(
-        gdf: GeoDataFrameAI,
-        name: str,
-        con,
-        *args,
-        **kwargs,
+    gdf: GeoDataFrameAI,
+    name: str,
+    con,
+    *args,
+    **kwargs,
 ) -> None:
     """
     Write a GeoDataFrameAI to a PostGIS-enabled database.
