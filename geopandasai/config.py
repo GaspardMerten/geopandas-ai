@@ -81,9 +81,9 @@ def get_geopandasai_config() -> GeoPandasAIConfig:
 )
 def set_active_lite_llm_config(lite_llm_config: dict) -> None:
     """Set the active lite LLM configuration."""
-    current_config = container.config()
-    updated_config = replace(current_config, lite_llm_config=lite_llm_config)
-    container.config.override(updated_config)
+    update_geopandasai_config(
+        lite_llm_config=lite_llm_config,
+    )
 
 
 def update_geopandasai_config(

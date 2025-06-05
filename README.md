@@ -65,7 +65,7 @@ a_second_df.set_description("A second GeoDataFrame containing additional geospat
 
 value = gdfai.chat(
     "Number of clusters in the data",
-    a_second_df, # Additional GeoDataFrame to use in the query, can add one or more GeoDataFrames
+    a_second_df,  # Additional GeoDataFrame to use in the query, can add one or more GeoDataFrames
     provided_libraries=['scikit-learn', 'numpy'],  # Additional libraries that can be used in the generated code
     return_type=int
 )
@@ -85,14 +85,19 @@ ai.find_clusters(
     a_second_df,  # Additional GeoDataFrame to use in the query
 )
 ```
+
 )
 
+For more examples, feel free to check
+the [GitHub examples folder](https://github.com/GaspardMerten/geopandas-ai/examples).
 
 ## ⚙️ Configuration: Customizing GeoPandasAI
 
-GeoPandasAI uses a dependency-injected configuration system for managing execution, injection, caching, and LLM-related behavior. This allows you to swap components easily for custom behavior or testing.
+GeoPandasAI uses a dependency-injected configuration system for managing execution, injection, caching, and LLM-related
+behavior. This allows you to swap components easily for custom behavior or testing.
 
-You can configure the lite_llm_config by using the same arguments as the ones you would provide to the `completion` function of [LiteLLM](https://docs.litellm.ai/docs/).
+You can configure the lite_llm_config by using the same arguments as the ones you would provide to the `completion`
+function of [LiteLLM](https://docs.litellm.ai/docs/).
 
 ---
 
@@ -127,7 +132,6 @@ config = get_geopandasai_config()
 print(config.libraries)
 
 ```
-
 
 ## Requirements
 
