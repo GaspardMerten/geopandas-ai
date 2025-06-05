@@ -86,10 +86,9 @@ ai.find_clusters(
 )
 ```
 
-)
 
 For more examples, feel free to check
-the [GitHub examples folder](https://github.com/GaspardMerten/geopandas-ai/examples).
+the [GitHub examples folder](https://github.com/GaspardMerten/geopandas-ai/tree/main/examples).
 
 ## ⚙️ Configuration: Customizing GeoPandasAI
 
