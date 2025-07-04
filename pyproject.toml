@@ -4,12 +4,19 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "geopandas-ai"
-version = "0.0.33"
+version = "0.0.34"
 description = "GeoPandas AI is an extension of GeoPandas allowing you to interact with your spatial data in natural language."
 readme = "README.md"
 authors = [
     { name = "Gaspard Merten", email = "gaspard@norse.be" },
+    { name = "Mahmoud Sakr", email = "mahmoud.sakr@ulb.be" },
+    { name = "Gilles Dejaegere", email = "gilles.dejaegere@ulb.be" }
 ]
+maintainers = [
+    { name = "Gaspard Merten", email = "gaspard@norse.be" }
+]
+keywords = ["geopandas", "geospatial", "spatial data", "natural language processing", "nlp", "ai", "artificial intelligence", "machine learning", "data science", "python", "gis", "geographic information systems"]
+
 license = "MIT"
 license-files = ["LICENSE.MD"]
 classifiers = [
@@ -29,8 +36,9 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/GaspardMerten/geopandas-ai"
-"Bug Tracker" = "https://github.com/GaspardMerten/geopandas-ai/issues"
+"Homepage" = "https://geopandas.ai"
+"Repository" = "https://github.com/GeoPandas-AI/geopandas-ai.git"
+"Bug Tracker" = "https://github.com/GeoPandas-AI/geopandas-ai/issues"
 
 
 

@@ -1,13 +1,12 @@
 # GeoPandas-AI
 
-<img src="https://raw.githubusercontent.com/GaspardMerten/geopandas-ai/main/docs/assets/logo.avif" height="100" alt="GeoPandas-AI Logo" style="max-width: 250px">
+<img src="https://raw.githubusercontent.com/GeoPandas-AI/geopandas-ai/main/docs/assets/logo.avif" height="100" alt="GeoPandas-AI Logo" style="max-width: 250px">
 
 **GeoPandas-AI** is an open-source Python library that enhances geospatial data analysis by turning the `GeoDataFrame` into a conversational, intelligent assistant. It seamlessly integrates large language models (LLMs) into the geospatial workflow, enabling natural language interaction, iterative refinement, caching, and code generation directly within your Python environment.
 
 [![PyPI version](https://badge.fury.io/py/geopandas-ai.svg)](https://pypi.org/project/geopandas-ai/)  
 [![arXiv](https://img.shields.io/badge/arXiv-2506.11781-b31b1b.svg)](https://arxiv.org/abs/2506.11781)  
-[View on GitHub →](https://github.com/GaspardMerten/geopandas-ai)
-
+[Documentation](https://geopandas.ai)
 ---
 
 ## 🌍 Motivation
@@ -161,9 +160,10 @@ gdfai.reset()
 
 * [📦 PyPI Package](https://pypi.org/project/geopandas-ai/)
 * [📖 arXiv Preprint](https://arxiv.org/abs/2506.11781)
-* [📘 Example Notebooks](https://github.com/GaspardMerten/geopandas-ai/tree/main/examples)
+* [📘 Example Notebooks](https://github.com/GeoPandas-AI/geopandas-ai/tree/main/examples)
 * [🧠 LiteLLM Docs](https://docs.litellm.ai/)
-* [🛠 GitHub Repository](https://github.com/GaspardMerten/geopandas-ai)
+* [🛠 GitHub Repository](https://github.com/GeoPandas-AI/geopandas-ai)
+* [Documentation](https://geopandas.ai)
 
 ---
 
@@ -183,10 +183,18 @@ If you use GeoPandas-AI in academic work, please cite:
 }
 ```
 
+## 🖎 Authors
+
+This project is a product of the Université Libre de Bruxelles ([ULB](https://www.ulb.be/en)), and most notably the Data Science and Engineering Lab.
+It is maintained by:
+- [Gaspard Merten](https://github.com/GaspardMerten)
+- [Mahmoud Sakr](https://github.com/mahmsakr)
+- Gilles Dejaegere
+
 ---
 
 ## 🪪 License
 
-MIT License – see [LICENSE](https://github.com/GaspardMerten/geopandas-ai/blob/main/LICENSE.MD) for details.
+MIT License – see [LICENSE](https://github.com/GeoPandas-AI/geopandas-ai/blob/main/LICENSE.MD) for details.
 
 > *GeoPandas-AI: Making geospatial analysis conversational, intelligent, and reproducible.*
