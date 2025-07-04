@@ -1,0 +1,84 @@
+site_name: GeoPandas-AI
+site_url: https://gaspardmerten.github.io/geopandas-ai/
+repo_url: https://github.com/GaspardMerten/geopandas-ai
+repo_name: GaspardMerten/geopandas-ai
+site_description: "GeoPandas-AI: Conversational, stateful GeoDataFrame with LLM integration"
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  # Enable light ↔ dark mode toggle
+  palette:
+    - scheme: default
+      primary: teal
+      accent: cyan
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      primary: teal
+      accent: cyan
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  # Custom fonts via Google Fonts
+  font:
+    text: "Roboto"
+    code: "Roboto Mono"
+  logo: https://raw.githubusercontent.com/GaspardMerten/geopandas-ai/main/logo.avif
+  favicon: https://raw.githubusercontent.com/GaspardMerten/geopandas-ai/main/logo.avif
+  # Modern UX features
+  features:
+    - navigation.instant        # Pages load instantly
+    - header.autohide           # Header hides on scroll
+    - navigation.top
+    - navigation.sections
+    - content.tabs.link         # clickable tabs
+    - toc.integrate
+    - content.code.copy
+    - content.code.annotate
+    - search.highlight
+    - search.suggest
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/GaspardMerten/geopandas-ai
+    - icon: fontawesome/solid/book
+      link: https://arxiv.org/abs/2506.11781
+
+# Optional custom CSS/JS for further styling tweaks
+extra_css:
+  - css/custom.css
+extra_javascript:
+  - js/custom.js
+
+nav:
+  - Home: index.md
+  - Getting Started: getting_started.md
+  - Examples: examples.md
+  - API Reference: api.md
+  - Paper: https://arxiv.org/abs/2506.11781
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          setup_commands:
+            - import sys
+            - sys.path.append(".")
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - footnotes
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.tabbed
+  - pymdownx.inlinehilite
+  - pymdownx.highlight
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:materialx.emoji.to_svg

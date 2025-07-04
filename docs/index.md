@@ -1,6 +1,6 @@
 # GeoPandas-AI
 
-<img src="https://raw.githubusercontent.com/GaspardMerten/geopandas-ai/main/docs/assets/logo.avif" height="100" alt="GeoPandas-AI Logo" style="max-width: 250px">
+<img src="https://raw.githubusercontent.com/GaspardMerten/geopandas-ai/main/docs/assets/icon.avif" height="100" alt="GeoPandas-AI Logo" style="max-width: 250px">
 
 **GeoPandas-AI** is an open-source Python library that enhances geospatial data analysis by turning the `GeoDataFrame` into a conversational, intelligent assistant. It seamlessly integrates large language models (LLMs) into the geospatial workflow, enabling natural language interaction, iterative refinement, caching, and code generation directly within your Python environment.
 
