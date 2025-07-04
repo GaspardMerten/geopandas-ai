@@ -62,13 +62,7 @@ nav:
 
 plugins:
   - search
-  - mkdocstrings:
-      handlers:
-        python:
-          setup_commands:
-            - import sys
-            - sys.path.append(".")
-
+  - mkdocstrings
 markdown_extensions:
   - admonition
   - codehilite
