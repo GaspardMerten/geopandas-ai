@@ -10,8 +10,8 @@ theme:
   # Enable light ↔ dark mode toggle
   palette:
     - scheme: default
-      primary: teal
-      accent: cyan
+      primary: 065F97
+      accent: 578BAE
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
