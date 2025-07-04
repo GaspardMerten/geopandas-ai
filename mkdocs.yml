@@ -1,5 +1,5 @@
 site_name: GeoPandas-AI
-site_url: https://gaspardmerten.github.io/geopandas-ai/
+site_url: https://geopandas-ai.github.io/
 repo_url: https://github.com/GaspardMerten/geopandas-ai
 repo_name: GaspardMerten/geopandas-ai
 site_description: "GeoPandas-AI: Conversational, stateful GeoDataFrame with LLM integration"
