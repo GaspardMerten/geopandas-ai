@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://geopandas-ai.github.io/geopandas-ai/</loc>
+         <lastmod>2025-07-04</lastmod>
+    </url>
+    <url>
+         <loc>https://geopandas-ai.github.io/geopandas-ai/api/</loc>
+         <lastmod>2025-07-04</lastmod>
+    </url>
+    <url>
+         <loc>https://geopandas-ai.github.io/geopandas-ai/examples/</loc>
+         <lastmod>2025-07-04</lastmod>
+    </url>
+    <url>
+         <loc>https://geopandas-ai.github.io/geopandas-ai/getting_started/</loc>
+         <lastmod>2025-07-04</lastmod>
+    </url>
+</urlset>
