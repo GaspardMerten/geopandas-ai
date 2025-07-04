@@ -25,8 +25,8 @@ theme:
   font:
     text: "Roboto"
     code: "Roboto Mono"
-  logo: https://raw.githubusercontent.com/GaspardMerten/geopandas-ai/main/logo.avif
-  favicon: https://raw.githubusercontent.com/GaspardMerten/geopandas-ai/main/logo.avif
+  logo: https://raw.githubusercontent.com/GaspardMerten/geopandas-ai/main/docs/assets/icon.avif
+  favicon: https://raw.githubusercontent.com/GaspardMerten/geopandas-ai/main/docs/assets/icon.avif
   # Modern UX features
   features:
     - navigation.instant        # Pages load instantly
